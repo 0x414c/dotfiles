@@ -1,0 +1,11 @@
+[greeter]
+theme-name = Numix
+position = 50%,center 50%,center
+screensaver-timeout = 60
+icon-theme-name = Numix-Circle
+clock-format = %a, %H:%M
+background = /usr/share/backgrounds/gnome/Locked.jpg
+default-user-image = #avatar-default
+font-name = Roboto Condensed, 10
+show-clock = false
+

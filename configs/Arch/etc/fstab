@@ -1,0 +1,11 @@
+# 
+# /etc/fstab: static file system information
+#
+# <file system>	<dir>	<type>	<options>	<dump>	<pass>
+# DEVICE DETAILS: /dev/sda1 UUID=47773add-4b86-44e7-9cf4-279656bc14db LABEL=BOOT_ARCH
+# DEVICE DETAILS: /dev/sda2 UUID=5b547558-bfce-44a4-9c24-07843a7815e3 LABEL=SWAP_ARCH
+# DEVICE DETAILS: /dev/sda3 UUID=71ca3ea4-bd0a-40f2-8fd7-abc7b36d894d LABEL=ROOT_ARCH
+# DEVICE DETAILS: /dev/sda4 UUID=16fa3a7a-38bd-43f7-b2f0-5d4da1201dac LABEL=HOME_ARCH
+UUID=16fa3a7a-38bd-43f7-b2f0-5d4da1201dac /home ext4 defaults, 0 1
+UUID=47773add-4b86-44e7-9cf4-279656bc14db /boot ext2 defaults, 0 1
+UUID=9ce15209-3c7b-4ee5-8484-3a6c1a951d9e  swap swap defaults, 0 0
