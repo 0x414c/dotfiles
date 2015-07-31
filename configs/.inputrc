@@ -2,12 +2,13 @@
 # ~/.inputrc
 #
 
-# NOTE: For description see https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html
+## NOTE: See https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html
+## See also http://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html#Commands-For-Completion
 
-# Pick system defaults
+## Pick up system defaults
 $include /etc/inputrc
 
-# Adjust options
+## Adjust options
 set bell-style audible
 set colored-stats on
 set completion-ignore-case on
@@ -33,8 +34,8 @@ set show-all-if-unmodified on
 set skip-completed-text on
 set visible-stats on
 
-# Set hotkeys
-# NOTE: Arrow keycodes is: Up | Right | Down | Left == ;5A | ;5C | ;5B | ;5D
+## Set hotkeys
+## NOTE: Arrow keycodes is: Up | Right | Down | Left == ;5A | ;5C | ;5B | ;5D
 "\e[1;5A": history-search-backward # ^Up
 "\e[1;5B": history-search-forward # ^Down
 "\e[1;5D": backward-word # ^Left
@@ -42,5 +43,5 @@ set visible-stats on
 "\e[1;6D": previous-history # ^ShiftLeft
 "\e[1;6C": next-history # ^ShiftRight
 
-# Set some macros
-# TODO:
+## Set some macros
+## TODO:
