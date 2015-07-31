@@ -23,4 +23,3 @@ do
 done
 
 rm .orig-threshold.png .orig-downscaled.png
-
