@@ -1,30 +1,12 @@
+#!/usr/bin/env bash
+
 #
 # ~/.bash_profile
 #
 
-[[ -f ~/.bashrc ]] && . ~/.bashrc
+# Pick stuff from user's config if it's present
+[[ -r ~/.bashrc ]] && . ~/.bashrc
 
-
-# export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd'
-# export PATH=$PATH:/usr/dt/bin
-
-
-# source the users bashrc if it exists
-# if [ -f "${HOME}/.bashrc" ] ; then
-#   source "${HOME}/.bashrc"
-# fi
-
-# Set PATH so it includes user's private bin if it exists
-# if [ -d "${HOME}/bin" ] ; then
-#   PATH="${HOME}/bin:${PATH}"
-# fi
-
-# Set MANPATH so it includes users' private man if it exists
-# if [ -d "${HOME}/man" ]; then
-#   MANPATH="${HOME}/man:${MANPATH}"
-# fi
-
-# Set INFOPATH so it includes users' private info if it exists
-# if [ -d "${HOME}/info" ]; then
-#   INFOPATH="${HOME}/info:${INFOPATH}"
-# fi
+# Set user-specific env. vars
+export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
+export PATH=$PATH:/usr/dt/bin:$HOME/bin:$HOME/opt/bin:$HOME/.local/bin
