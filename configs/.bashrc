@@ -27,8 +27,8 @@
 # ***************************** And various env vars... ***********************
 ## Use ANSI color sequences to distinguish file types
 export CLICOLOR=1
-## NOTE: LS_COLORS is for GNU Coreutils, LSCOLORS is for BSD Coreutils
-## Set LS_COLORS using .dir_colors file contents
+## NOTE: `LS_COLORS' is for GNU Coreutils, `LSCOLORS' is for BSD Coreutils
+## Set `LS_COLORS' using `.dir_colors' file contents
 # eval `dircolors -b $HOME/.dir_colors` 
 ## Or use precomputed values
 # export LS_COLORS=ExFxBxDxCxegedabagacad # Light
@@ -36,7 +36,7 @@ export CLICOLOR=1
 # export LS_COLORS="ExGxBxDxCxEgEdxbxgxcxd" # Linux default?
 export LS_COLORS="rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:" # Default
 
-## If the `listlinks' is set, ls -F will identify symbolic links in more detail
+## If the `listlinks' is set, `ls -F' will identify symbolic links in more detail
 export LISTLINKS=1
 
 ## This specifies the default block size for all values that are normally printed as blocks
@@ -45,7 +45,7 @@ export BLOCKSIZE=1KiB
 ## This variable specifies the colors and other attributes used to highlight various parts of the output
 export GREP_COLORS="ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
-## Options are also taken from the environment variable "LESS"
+## Options (for `less', ofc) are also taken from the environment variable `LESS'
 export LESS="CFR"
 
 ## Contains command to run the program used to list the contents of files
@@ -54,11 +54,11 @@ export PAGER="less"
 export SYSTEMD_PAGER=$PAGER
 
 ## Contains the command to run the lightweight program used for editing files
-## The editor program called by sudoedit, vipw, and other such programs when you tell them to edit a file
+## The editor program called by `sudoedit', `vipw', and other such programs when you tell them to edit a file
 if [ -n "$DISPLAY" ]; then export EDITOR="gedit"; else export EDITOR="nano"; fi
 
 ## Contains command to run the full-fledged editor that is used for more demanding tasks
-## Many programs, including less and crontab, will invoke VISUAL to edit a file, falling back to EDITOR if VISUAL is not set - but others invoke EDITOR directly
+## Many programs, including `less' and `crontab', will invoke VISUAL to edit a file, falling back to `EDITOR' if `VISUAL' is not set - but others invoke `EDITOR' directly
 if [ -n "$DISPLAY" ]; then export VISUAL="subl3"; else export EDITOR="ne"; fi
 
 ## Contains the path to the web browser
@@ -68,25 +68,30 @@ if [ -n "$DISPLAY" ]; then export BROWSER="firefox"; else export BROWSER="lynx";
 # *****************************************************************************
 
 
-# ***************************** Flavour w/ bash options... ********************
-## NOTE: See http://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html
+# ***************************** Flavour w/ Bash options... ********************
+## NOTE: See `http://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html'
 HISTFILE=$HOME/.bash_history
 HISTFILE2=$HOME/.bash_history-
 HISTFILESIZE=50000
 HISTSIZE=50000
 HISTCONTROL=ignoredups:ignorespace:erasedups
-HISTIGNORE=$"[ \t]*:&:[fb]g:exit:ls"
+HISTIGNORE=$"[ \t]*:&:[fb]g:exit:ls *:ls"
 
 ## Make history backup
 [ ! -f $HISTFILE ] && touch $HISTFILE
 [ ! -f $HISTFILE2 ] && touch $HISTFILE2
 cp $HISTFILE $HISTFILE2 1>/dev/null 2>&1
 
-## NOTE: See http://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+## NOTE: See `http://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html'
+set -o emacs
+set -o monitor
 set -o noclobber
-# set -o nounset
+# set -o nounset # NOTE: unbound vars is present in `bash_completion'
+set -o posix
+# set -o xtrace # for debugging purposes
+# set -o verbose # for debugging purposes
 
-## NOTE: See http://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+## NOTE: See `http://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html'
 shopt -s autocd
 shopt -s cdable_vars
 shopt -s cdspell
@@ -202,7 +207,7 @@ alias pacexpl="pacman -D --asexp"	# Mark one or more installed packages as expli
 alias pacimpl="pacman -D --asdep"	# Mark one or more installed packages as non explicitly installed
 
 ## For recursively removing orphans and their configuration files
-alias pacro="sudo pacman -Rns $(pacman -Qtdq)"
+alias pacro="sudo pacman -Rns \$(pacman -Qtdq)"
 # '[r]emove [o]rphans' - recursively remove ALL orphaned packages
 alias pacro2="pacman -Qtdq 1>/dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;\$!ba;s/\n/ /g')"
 
@@ -211,6 +216,7 @@ alias pacupd="sudo pacman -Sy && sudo abs"  # Update and refresh the local packa
 alias pacinsd="sudo pacman -S --asdeps"     # Install given package(s) as dependencies
 alias pacmir="sudo pacman -Syy"             # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
 alias pacown="pacman -Qo"                   # Which package owns a file?
+alias pacopt="sudo pacman -Sc && sudo pacman-optimize" # Optimize
 # *****************************************************************************
 
 
@@ -290,18 +296,18 @@ function cmd_exists {
 ## Prints horizontal separator line
 function hr {
 ## "*" "═" "▬" "━"
-    yes '▬' | head -n $COLUMNS | tr -d '\n'
+    command yes '━' 2>/dev/null | head -n $COLUMNS | tr -d '\n'
 }
 
-## Search manpage given in agument '1' for term given in argument '2' (case insensitive)
+## Search manpage given in argument `1' for term given in argument `2' (case insensitive)
 ## displays paginated result with colored search terms and two lines surrounding each hit
 function manf {
-    man $1 | grep -iC2 $2 | less
+    command man $1 | grep -iC2 $2 | less
 }
 
 ## Makes a new dir and cds into it
 function mkcd {
-    mkdir -p "$1" && cd "$1";
+    command mkdir -pv "$1" && cd "$1";
 }
 # *****************************************************************************
 
@@ -418,49 +424,57 @@ function mkcd {
 
 
 # ***************************** And add nifty prompts... **********************
-## Welcome message pt. I
-# command fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
-# command echo
-# command fortune -a | fmt -75 -s | cowsay -n -f tux
+function __make_prompts__ {
+    ## Welcome message pt. I
+    # command fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
+    # command echo -en '\n'
+    command fortune -a | fmt -75 -s | cowsay -n -f tux
+    # command echo -en '\n'
 
-## Some colors...
-__rese__="\[\e[0m\]"
-__cya0__="\[\e[0;49;36m\]"
-__cya2__="\[\e[7;49;36m\]"
-__red2__="\[\e[7;49;31m\]"
-__gre2__="\[\e[7;49;32m\]"
-__pin1__="\[\e[7;49;35m\]"
-__pin2__="\[\e[7;107;35m\]"
-__whi0__="\[\e[0;49;37m\]"
-__whi2__="\[\e[7;49;37m\]"
-__yel2__="\[\e[7;49;33m\]"
-__blu0__="\[\e[0;49;34m\]"
-__blu1__="\[\e[7;49;34m\]"
-__blu2__="\[\e[7;107;34m\]"
+    ## Some colors...
+    local __rese__="\[\e[0m\]"
+    local __cya0__="\[\e[0;49;36m\]"
+    local __cya2__="\[\e[7;49;36m\]"
+    local __red2__="\[\e[7;49;31m\]"
+    local __gre2__="\[\e[7;49;32m\]"
+    local __pin1__="\[\e[7;49;35m\]"
+    local __pin2__="\[\e[7;107;35m\]"
+    local __whi0__="\[\e[0;49;37m\]"
+    local __whi2__="\[\e[7;49;37m\]"
+    local __yel2__="\[\e[7;49;33m\]"
+    local __blu0__="\[\e[0;49;34m\]"
+    local __blu1__="\[\e[7;49;34m\]"
+    local __blu2__="\[\e[7;107;34m\]"
 
-## and beautiful chars
-# ─╳→→↪↠↣→⇨↦↬⊕⟴⇛⇻⇉▶▷●◉◆◇○◈☑☒☐➥➥➦➜➞➡➢➣➤➩➯➮➭➲➨➽─━│┃┆┇┊┋▓▒░▞▚┏┗┃▼▽▶▷◀◁▲△╚═╔═✧✦⭆🢂🡆🞉◙🙼🞮🞓🞧🞿🞺🠶🢜🢝🢞🢟⬤⬛⭙
+    ## ...and beautiful chars
+    # ─╳→→↪↠↣→⇨↦↬⊕⟴⇛⇻⇉▶▷●◉◆◇○◈☑☒☐➥➥➦➜➞➡➢➣➤➩➯➮➭➲➨➽─━│┃┆┇┊┋▓▒░▞▚┏┗┃▼▽▶▷◀◁▲△╚═╔═✧✦⭆🢂🡆🞉◙🙼🞮🞓🞧🞿🞺🠶🢜🢝🢞🢟⬤⬛⭙🙾
 
-__beg__="🙼"
-__sta__=""
-__end__="🙼"
-__arr__=" 🢂"
-__vse__="🙼"
-__pra__=""
-__prb__=""
-__ps2__="🠶 "
-__ps3__="🠶 "
-__ps4__="🠶 "
+    local __beg__="🙼"
+    local __sta__=""
+    local __end__="🙼"
+    local __arr__=" 🢂"
+    local __vse__="🙼"
+    local __pra__=""
+    local __prb__=""
+    local __ps2__="🠶 "
+    local __ps3__="🠶 "
+    local __ps4__="🠶 "
 
-PROMPT_COMMAND="history -a; echo -e '\a'; hr; echo; echo; "$PROMPT_COMMAND
+    ## Welcome message the Second
+    ## TODO: outdated & not working
+    # command echo -en "$__rese__$__blu0__  $__beg__$__blu2__ $__sta__ $(uname -a) $__blu1__$__end__$__rese__"
 
-## Welcome message the Second
-#command echo -en "$__blu0__  $__beg__$__blu2__ $__sta__ $(uname -a) $__blu1__$__end__$__rese__"
+    ## If set, the value is interpreted as a command to execute before the printing of each primary prompt
+    ## TODO: use Git's PS1
+    PROMPT_COMMAND="history -a; echo -en '\a\n'; hr; echo -en '\n\n'; "$PROMPT_COMMAND
 
-## PSs
-## TODO: powerline-style arrows
-PS1="$__pra__$__cya0__ $__beg__$__rese__$__cya2__ $__sta__ \D{%F %T} $__vse__$__red2__  \u $__vse__$__gre2__  @\H $__vse__$__pin2__  :\w $__pin1__$__end__$__rese__\n$__prb__$__whi0__$__beg__$__rese__$__whi2__ $__sta__ \!:\#:\j:\l $__vse__$__yel2__  \W $__vse__$__blu2__  \$ $__blu1__$__end__$__rese__\[\a\] "
-PS2="\e[7;49;94m$__ps2__\e[0m"
-PS3="\e[7;49;94m$__ps3__\e[0m"
-PS4="\e[7;49;94m$__ps4__\e[0m"
+    ## PSs
+    ## TODO: powerline-style arrows
+    PS1="$__rese__$__pra__$__cya0__ $__beg__$__rese__$__cya2__ $__sta__ \D{%F %T} $__vse__$__red2__  \u $__vse__$__gre2__  @\H $__vse__$__pin2__  :\w $__pin1__$__end__$__rese__\n$__rese__$__prb__$__whi0__$__beg__$__rese__$__whi2__ $__sta__ \!:\#:\j:\l $__vse__$__yel2__  \W $__vse__$__blu2__  \$ $__blu1__$__end__$__rese__\[\a\]  "
+    PS2="\e[7;49;94m$__ps2__\e[0m"
+    PS3="\e[7;49;94m$__ps3__\e[0m"
+    PS4="\e[7;49;94m$__ps4__\e[0m"
+}
+
+__make_prompts__
 # *****************************************************************************
