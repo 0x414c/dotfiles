@@ -2,46 +2,71 @@
 # ~/.inputrc
 #
 
-## NOTE: See https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html
-## See also http://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html#Commands-For-Completion
+## NOTE: `See https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html'
+## See also `http://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html'
 
 ## Pick up system defaults
 $include /etc/inputrc
 
 ## Adjust options
+## NOTE: `bind -v' to show options
 set bell-style audible
+set bind-tty-special-chars on
+set blink-matching-paren on
+set byte-oriented off
 set colored-stats on
+set comment-begin #
+set completion-display-width -1
 set completion-ignore-case on
 set completion-map-case on
+set completion-prefix-display-length 0
 set completion-query-items 50
 set convert-meta off
+set disable-completion off
+set echo-control-characters on
 set editing-mode emacs
-set echo-control-characters  on
+set enable-keypad off
 set enable-meta-key on
-set expand-tilde on
+set expand-tilde off
 set history-preserve-point off
+set history-size 50000
+set horizontal-scroll-mode off
 set input-meta on
 set keymap emacs
+set keyseq-timeout 500
 set mark-directories on
 set mark-modified-lines off
 set mark-symlinked-directories on
-set match-hidden-files on
+set match-hidden-files off
+set menu-complete-display-prefix off
+set meta-flag on
 set output-meta on
 set page-completions on
+set prefer-visible-bell on
+set print-completions-horizontally off
 set revert-all-at-newline off
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
+set show-mode-in-prompt off
 set skip-completed-text on
 set visible-stats on
 
 ## Set hotkeys
-## NOTE: Arrow keycodes is: Up | Right | Down | Left == ;5A | ;5C | ;5B | ;5D
-"\e[1;5A": history-search-backward # ^Up
-"\e[1;5B": history-search-forward # ^Down
-"\e[1;5D": backward-word # ^Left
-"\e[1;5C": forward-word # ^Right
-"\e[1;6D": previous-history # ^ShiftLeft
-"\e[1;6C": next-history # ^ShiftRight
+## NOTE: `bind -v' to show options
+## NOTE: To get keycodes use `read' or `^V' (switches term to verbatim mode)
+## NOTE: See `https://code.google.com/p/iterm2/wiki/Keybindings'
+## NOTE: Arrow keycodes is: Up | Right | Down | Left == ^[[1;5A | ^[[1;5C | ^[[1;5B | ^[[1;5D
+"\e[1;5A": history-search-backward # Control-Up -> search for completions to the current line from history
+"\e[1;5B": history-search-forward # Control-Down
+"\e[1;5D": backward-word # Control-Left -> jump one word left
+"\e[1;5C": forward-word # Control-Right
+"\e[1;6D": previous-history # Control-Shift-Left
+"\e[1;6C": next-history # Control-Shift-Right
+"\t": menu-complete # Tab -> CMD.exe-like rotating completion (but w/ BASH-like completions list)
+"\e[Z": menu-complete-backward # Shift-Tab -> 
+# "\e[3~": backward-kill-word # Meta-Del -> 
+# "\e[3;2~": backward-kill-word # Shift-Del -> 
 
 ## Set some macros
 ## TODO:
+# control-o: "> output"
