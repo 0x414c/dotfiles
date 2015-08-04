@@ -4,5 +4,5 @@
 # ~/.bash_logout
 #
 
-clear
-reset
+command tput clear
+command tput reset
