@@ -9,4 +9,6 @@
 
 ## Set user-specific env. vars
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
+export GDK_USE_XFT=1
+export QT_XFT=true
 export PATH=$PATH:/usr/dt/bin:$HOME/bin:$HOME/opt/bin:$HOME/.local/bin
