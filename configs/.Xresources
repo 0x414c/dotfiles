@@ -1,0 +1,17 @@
+!
+! ~/.Xresources
+!
+
+! To reload, execute 
+! xrdb -merge $HOME/.Xresources
+
+Xft.antialias:  true
+Xft.autohint:   false
+Xft.dpi:        96.0
+Xft.hinting:    true
+Xft.hintstyle:  hintslight
+! none hintslight hintmedium hintfull
+Xft.lcdfilter:  lcddefault
+! lcdnone lcddefault lcdlight lcdlegacy
+Xft.rgba:       none
+! none rgb bgr vrgb vbgr
