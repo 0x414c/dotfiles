@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function col {
+function colors2 {
     local fgc bgc vals seq0
 
     printf "Color escapes are %s\n" '\e[${value};...;${value}m'
@@ -23,6 +23,11 @@ function col {
             printf " ${seq0}TEXT\e[m"
             printf " \e[${vals:+${vals+$vals;}}1mBOLD\e[m"
         done
-        echo; echo
+        echo
+        echo
     done
 }
+
+colors2
+
+exit 0
