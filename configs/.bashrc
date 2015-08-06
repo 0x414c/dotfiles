@@ -24,6 +24,12 @@ function __use_system_helpers__ {
     [ -r /usr/share/doc/pkgfile/command-not-found.bash ] && . /usr/share/doc/pkgfile/command-not-found.bash || echo "command-not-found.bash not found"
     [ -r /usr/share/git/completion/git-completion.bash ] && . /usr/share/git/completion/git-completion.bash || echo "git-completion.bash not found"
     [ -r /usr/share/git/completion/git-prompt.sh ] && . /usr/share/git/completion/git-prompt.sh || echo "git-prompt.sh not found"
+    ## Configure Git prompt
+    ## NOTE: For decriptions see `git-prompt.sh'
+    export GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWSTASHSTATE=1
+    export GIT_PS1_SHOWUNTRACKEDFILES=1
+    export GIT_PS1_SHOWUPSTREAM="auto"
 }
 # *****************************************************************************
 
@@ -237,6 +243,8 @@ function __use_user_helpers__ {
 # ***************************** And add nifty prompts... **********************
 function __init_prompts__ {
     ## Some colors...
+    ## NOTE: For color codes 
+    ## see `../scripts/colors_16.sh'
     local __rese__="\[\e[0m\]"
     local __cya0__="\[\e[0;49;36m\]"
     local __cya2__="\[\e[7;49;36m\]"
@@ -256,9 +264,6 @@ function __init_prompts__ {
 
     local __beg__="🙼" # prompt begin
     local __end__="🙼" # prompt end
-    local __sta__="" # prompt text start
-    local __pra__="" # 1st line start
-    local __prb__="" # 2nd line start
     local __arr__="🢂" # arrow
     local __sep__="🙼" # sections separator
     local __ps2__="🠶"
@@ -271,7 +276,43 @@ function __init_prompts__ {
 
     ## PSs
     ## TODO: powerline-style arrows
-    PS1="$__rese__$__pra__$__cya0__ $__beg__$__rese__$__cya2__ $__sta__ \D{%F %T} $__sep__$__red2__  \u $__sep__$__gre2__  @\H $__sep__$__mag2__  :\w $__mag1__$__end__$__rese__\n$__rese__$__prb__$__whi0__$__beg__$__rese__$__whi2__ $__sta__ \!:\#:\j:\l $__sep__$__yel2__  \W $__sep__$__blu2__  \$ $__blu1__$__end__$__rese__  "
+    ## NOTE:
+    # Sequence  Description
+    # \a        The ASCII bell character (you can also type \007)
+    # \d        Date in "Wed Sep 06" format
+    # \e        ASCII escape character (you can also type \033)
+    # \h        First part of hostname (such as "mybox")
+    # \H        Full hostname (such as "mybox.mydomain.com")
+    # \j        The number of processes you've suspended in this shell by hitting ^Z
+    # \l        The name of the shell's terminal device (such as "ttyp4")
+    # \n        Newline
+    # \r        Carriage return
+    # \s        The name of the shell executable (such as "bash")
+    # \t        Time in 24-hour format (such as "23:01:01")
+    # \T        Time in 12-hour format (such as "11:01:01")
+    # \@        Time in 12-hour format with am/pm
+    # \u        Your username
+    # \v        Version of bash (such as 2.04)
+    # \V        Bash version, including patchlevel
+    # \w        Current working directory (such as "/home/drobbins")
+    # \W        The "basename" of the current working directory (such as "drobbins")
+    # \!        Current command's position in the history buffer
+    # \#        Command number (this will count up at each prompt, as long as you type something)
+    # \$        If you are not root, inserts a "$"; if you are root, you get a "#"
+    # \xxx      Inserts an ASCII character based on three-digit number xxx (replace unused digits with zeros, such as "\007")
+    # \\        A backslash
+    # \[        This sequence should appear before a sequence of characters that don't move the cursor (like color escape sequences). This allows bash to calculate word wrapping correctly.
+    # \]        This sequence should appear after a sequence of non-printing characters.
+    local __datetime__="$__cya2__  \D{%F %T}"
+    local __user__="$__red2__  \u"
+    local __host__="$__gre2__  @\H"
+    local __dirpath__="$__mag2__  :\w"
+    local __jobs__="$__whi2__  \!:\#:\j:\l"
+    local __gitps__='$(__git_ps1 " 🙼  (%s)")'
+    local __dirname__="$__yel2__  \W"$__gitps__
+    local __rootmark__="$__blu2__  \$"
+
+    PS1="$__rese__$__cya0__ $__beg__$__rese__$__datetime__ $__sep__$__user__ $__sep__$__host__ $__sep__$__dirpath__ $__mag1__$__end__$__rese__\n$__rese__$__prb__$__whi0__$__beg__$__rese__$__jobs__ $__sep__$__dirname__ $__sep__$__rootmark__ $__blu1__$__end__$__rese__  "
     PS2="\e[0m\e[7;49;31m$__ps2__ $__end__\e[0m "
     PS3="\e[0m\e[7;49;32m$__ps3__ $__end__\e[0m "
     PS4="\e[0m\e[7;49;34m$__ps4__ $__end__\e[0m "
