@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function colors2 {
     local fgc bgc vals seq0
@@ -31,3 +31,5 @@ function colors2 {
 colors2
 
 exit 0
+
+## EOF

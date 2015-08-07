@@ -1,4 +1,3 @@
-
     Tab ↹ : Autocompletes from the cursor position.
     Ctrl+a : Moves the cursor to the line start (equivalent to the key Home).
     Ctrl+b : Moves the cursor back one character (equivalent to the key ←).

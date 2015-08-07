@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This program is free software. It comes without any warranty, to
 # the extent permitted by applicable law. You can redistribute it
@@ -6,16 +6,19 @@
 # To Public License, Version 2, as published by Sam Hocevar. See
 # http://sam.zoy.org/wtfpl/COPYING for more details.
 
-for fgbg in 38 48 ; do #Foreground/Background
-	for color in {0..256} ; do #Colors
-		#Display the color
-		echo -en "\e[${fgbg};5;${color}m ${color}\t\e[0m"
-		#Display 10 colors per lines
-		if [ $((($color + 1) % 10)) == 0 ] ; then
-			echo #New line
-		fi
+#Background
+for clbg in {40..47} {100..107} 49 ; do
+	#Foreground
+	for clfg in {30..37} {90..97} 39 ; do
+		#Formatting
+		for attr in 0 1 2 4 5 7 ; do
+			#Print the result
+			echo -en "\e[${attr};${clbg};${clfg}m ^[${attr};${clbg};${clfg}m \e[0m"
+		done
+		echo #Newline
 	done
-	echo #New line
 done
 
 exit 0
+
+## EOF

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 for cf in $(cowsay -l | tail -n +2); do
     echo $cf
@@ -7,3 +7,5 @@ for cf in $(cowsay -l | tail -n +2); do
 done
 
 exit 0
+
+## EOF

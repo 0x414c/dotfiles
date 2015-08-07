@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # kill off xserver.  For example, if you are running lightdm:
 sudo systemctl stop lightdm
 
@@ -13,3 +15,4 @@ export LANG=C
 # Start CDE
 startx /usr/dt/bin/Xsession
 
+## EOF

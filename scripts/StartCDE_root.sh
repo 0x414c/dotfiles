@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # kill off xserver.  For example, if you are running lightdm:
 systemctl stop lightdm
 
@@ -9,3 +11,5 @@ export PATH=$PATH:/usr/dt/bin
 export LANG=C
 cd /usr/dt/bin
 ./dtlogin
+
+## EOF
