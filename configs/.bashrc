@@ -175,7 +175,7 @@ function __init_aliases__ {
     ## Make some commands more comfortable to use
     alias mkdir="mkdir -pv"
     alias ..="cd ./../"
-    alias ...="cd ./../../"
+    alias ....="cd ./../../"
     alias .-="cd -"
 
     ## Shortcuts...
@@ -190,6 +190,7 @@ function __init_aliases__ {
     alias snn="sudo nano"
     alias ssc="sudo systemctl"
     alias rscpy="rsync --progress --human-readable --verbose --archive --recursive"
+	alias whence="type -a"
     alias gc="git clone"
     alias gl="git log"
 
