@@ -1,16 +1,18 @@
 [:0a9e5702-e30c-4242-80c4-78bdad3254cc]
 foreground-color='rgb(229,229,195)'
 rewrap-on-resize=false
-visible-name='Main2'
+visible-name='Main_Ocean_v1'
 login-shell=true
 palette=['rgb(85,87,83)', 'rgb(164,0,0)', 'rgb(78,154,6)', 'rgb(196,160,0)', 'rgb(52,101,164)', 'rgb(117,80,123)', 'rgb(6,152,154)', 'rgb(186,189,182)', 'rgb(136,138,133)', 'rgb(204,0,0)', 'rgb(115,210,22)', 'rgb(237,212,0)', 'rgb(114,159,207)', 'rgb(173,127,168)', 'rgb(51,203,203)', 'rgb(211,215,207)']
-default-size-columns=120
+custom-command='bash'
 default-size-rows=32
+default-size-columns=120
 cursor-shape='block'
 scroll-on-output=true
-use-theme-colors=false
+use-custom-command=false
 use-system-font=false
 exit-action='hold'
+use-theme-colors=false
 font='Input Mono Compressed Extra-Condensed 8'
 allow-bold=true
 scrollback-unlimited=true
@@ -19,21 +21,46 @@ bold-color='rgb(238,238,214)'
 background-color='rgb(18,52,86)'
 scrollbar-policy='always'
 
+[:91548744-44aa-4744-a76e-35b83803e04e]
+foreground-color='rgb(255,236,179)'
+rewrap-on-resize=true
+visible-name='Main_Material/Coffee'
+login-shell=true
+palette=['rgb(55,71,79)', 'rgb(211,47,47)', 'rgb(56,142,60)', 'rgb(255,160,0)', 'rgb(25,118,210)', 'rgb(194,24,91)', 'rgb(0,151,167)', 'rgb(144,164,174)', 'rgb(84,110,122)', 'rgb(244,67,54)', 'rgb(76,175,80)', 'rgb(255,193,7)', 'rgb(33,150,243)', 'rgb(233,30,99)', 'rgb(0,188,212)', 'rgb(207,216,220)']
+custom-command='bash'
+default-size-rows=32
+default-size-columns=120
+cursor-shape='block'
+scroll-on-output=true
+use-custom-command=false
+use-system-font=false
+exit-action='hold'
+use-theme-colors=false
+font='Input Mono Compressed Medium Extra-Condensed 8'
+allow-bold=true
+scrollback-unlimited=true
+bold-color-same-as-fg=false
+bold-color='rgb(255,246,217)'
+background-color='rgb(62,39,35)'
+scrollbar-policy='always'
+
 [:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
 foreground-color='rgb(229,229,195)'
 rewrap-on-resize=false
-visible-name='Main'
+visible-name='Main_Ocean_v2'
 login-shell=true
 palette=['rgb(85,87,83)', 'rgb(166,17,17)', 'rgb(78,154,6)', 'rgb(196,160,0)', 'rgb(57,116,191)', 'rgb(133,91,140)', 'rgb(14,139,140)', 'rgb(186,189,182)', 'rgb(136,138,133)', 'rgb(179,45,45)', 'rgb(107,166,50)', 'rgb(191,174,29)', 'rgb(87,150,217)', 'rgb(166,116,160)', 'rgb(54,179,179)', 'rgb(211,215,207)']
-default-size-columns=120
+custom-command='bash'
 default-size-rows=32
+default-size-columns=120
 cursor-shape='block'
 scroll-on-output=true
-use-custom-default-size=true
+use-custom-command=false
 use-system-font=false
 exit-action='hold'
 use-theme-colors=false
 font='Input Mono Compressed Extra-Condensed 8'
+use-custom-default-size=true
 allow-bold=true
 scrollback-unlimited=true
 bold-color-same-as-fg=false
@@ -42,5 +69,28 @@ background-color='rgb(18,52,86)'
 scrollbar-policy='always'
 
 [/]
-list=['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '0a9e5702-e30c-4242-80c4-78bdad3254cc']
-default='b1dcc9dd-5262-4d8d-a863-c897e6d979b9'
+list=['b1dcc9dd-5262-4d8d-a863-c897e6d979b9', '0a9e5702-e30c-4242-80c4-78bdad3254cc', '91548744-44aa-4744-a76e-35b83803e04e', 'dc9ac068-cdd7-46f0-b683-1fd13a51bc2d']
+default='dc9ac068-cdd7-46f0-b683-1fd13a51bc2d'
+
+[:dc9ac068-cdd7-46f0-b683-1fd13a51bc2d]
+foreground-color='rgb(230,225,184)'
+rewrap-on-resize=false
+visible-name='Main_Material/Ocean'
+login-shell=true
+palette=['rgb(55,71,79)', 'rgb(191,54,12)', 'rgb(46,125,50)', 'rgb(217,110,22)', 'rgb(2,119,189)', 'rgb(57,73,171)', 'rgb(0,121,107)', 'rgb(144,164,174)', 'rgb(84,110,122)', 'rgb(230,81,35)', 'rgb(67,160,71)', 'rgb(230,138,23)', 'rgb(3,155,229)', 'rgb(92,107,192)', 'rgb(0,150,136)', 'rgb(207,216,220)']
+custom-command='bash'
+default-size-rows=32
+default-size-columns=120
+cursor-shape='block'
+scroll-on-output=true
+use-custom-command=false
+use-system-font=false
+exit-action='hold'
+use-theme-colors=false
+font='Input Mono Compressed Extra-Condensed 8'
+allow-bold=true
+scrollback-unlimited=true
+bold-color-same-as-fg=false
+bold-color='rgb(242,237,194)'
+background-color='rgb(13,38,64)'
+scrollbar-policy='always'
