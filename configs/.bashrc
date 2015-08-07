@@ -26,10 +26,13 @@ function __use_system_helpers__ {
     [ -r /usr/share/git/completion/git-prompt.sh ] && . /usr/share/git/completion/git-prompt.sh || echo "git-prompt.sh not found"
     ## Configure Git prompt
     ## NOTE: For decriptions see `git-prompt.sh'
-    export GIT_PS1_SHOWDIRTYSTATE=1
-    export GIT_PS1_SHOWSTASHSTATE=1
-    export GIT_PS1_SHOWUNTRACKEDFILES=1
-    export GIT_PS1_SHOWUPSTREAM="auto"
+    GIT_PS1_SHOWDIRTYSTATE=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWUPSTREAM="name"
+    GIT_PS1_STATESEPARATOR=" 🙼  "
+    GIT_PS1_DESCRIBE_STYLE="default"
+    GIT_PS1_SHOWCOLORHINTS=1
 }
 # *****************************************************************************
 
@@ -57,12 +60,14 @@ function __init_env_vars__ {
     export GREP_COLORS="ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36"
 
     ## Options (for `less', ofc) are also taken from the environment variable `LESS'
-    export LESS="CFR"
+    export LESS="C"
 
     ## Contains command to run the program used to list the contents of files
     ## The pager called by man and other such programs when you tell them to view a file
     export PAGER="less"
     export SYSTEMD_PAGER=$PAGER
+    # export VIEWER="most"
+    # export MANPAGER=$PAGER
 
     ## Contains the command to run the lightweight program used for editing files
     ## The editor program called by `sudoedit', `vipw', and other such programs when you tell them to edit a file
@@ -74,6 +79,9 @@ function __init_env_vars__ {
 
     ## Contains the path to the web browser
     if [ -n "$DISPLAY" ]; then export BROWSER="firefox"; else export BROWSER="lynx"; fi
+
+    ## POSIX-compliant mode
+    # export POSIXLY_CORRECT=1 # NOTE: conflicts w/ `yaourt'
 }
 # *****************************************************************************
 
@@ -167,7 +175,8 @@ function __init_aliases__ {
     ## Make some commands more comfortable to use
     alias mkdir="mkdir -pv"
     alias ..="cd ./../"
-    alias ....="cd ./../../"
+    alias ...="cd ./../../"
+    alias .-="cd -"
 
     ## Shortcuts...
     alias g="grep"
@@ -175,6 +184,8 @@ function __init_aliases__ {
     alias t="time"
     alias h="history"
     alias cls="clear"
+    alias rst="reset"
+    alias lo="logout"
     alias cmx="chmod +x"
     alias snn="sudo nano"
     alias ssc="sudo systemctl"
@@ -228,7 +239,7 @@ function __init_aliases__ {
     alias pacinsd="sudo pacman -S --asdeps"     # Install given package(s) as dependencies
     alias pacmir="sudo pacman -Syy"             # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
     alias pacown="pacman -Qo"                   # Which package owns a file?
-    alias pacopt="sudo pacman -Sc && sudo pacman-optimize" # Optimize
+    alias pacopt="sudo pacman -Sc && sudo pacman-optimize" # Optimize pacman database
 }
 # *****************************************************************************
 
@@ -244,17 +255,17 @@ function __use_user_helpers__ {
 function __init_prompts__ {
     ## Some colors...
     ## NOTE: For color codes 
-    ## see `../scripts/colors_16.sh'
+    ## see `../scripts/colors_and_formatting_16.bash'
     local __rese__="\[\e[0m\]"
     local __cya0__="\[\e[0;49;36m\]"
-    local __cya2__="\[\e[7;49;36m\]"
-    local __red2__="\[\e[7;49;31m\]"
-    local __gre2__="\[\e[7;49;32m\]"
+    local __cya1__="\[\e[7;49;36m\]"
+    local __red1__="\[\e[7;49;31m\]"
+    local __gre1__="\[\e[7;49;32m\]"
     local __mag1__="\[\e[7;49;35m\]"
     local __mag2__="\[\e[7;107;35m\]"
     local __whi0__="\[\e[0;49;37m\]"
-    local __whi2__="\[\e[7;49;37m\]"
-    local __yel2__="\[\e[7;49;33m\]"
+    local __whi1__="\[\e[7;49;37m\]"
+    local __yel1__="\[\e[7;49;33m\]"
     local __blu0__="\[\e[0;49;34m\]"
     local __blu1__="\[\e[7;49;34m\]"
     local __blu2__="\[\e[7;107;34m\]"
@@ -266,12 +277,11 @@ function __init_prompts__ {
     local __end__="🙼" # prompt end
     local __arr__="🢂" # arrow
     local __sep__="🙼" # sections separator
-    local __ps2__="🠶"
-    local __ps3__="🠶"
+    local __ps2__="🢂"
+    local __ps3__="🡆"
     local __ps4__="🠶"
 
     ## If set, the value is interpreted as a command to execute before the printing of each primary prompt
-    ## TODO: use Git's PS1
     PROMPT_COMMAND="history -a; echo -en '\a\n'; hr; echo -en '\n\n'; "$PROMPT_COMMAND
 
     ## PSs
@@ -303,19 +313,19 @@ function __init_prompts__ {
     # \\        A backslash
     # \[        This sequence should appear before a sequence of characters that don't move the cursor (like color escape sequences). This allows bash to calculate word wrapping correctly.
     # \]        This sequence should appear after a sequence of non-printing characters.
-    local __datetime__="$__cya2__  \D{%F %T}"
-    local __user__="$__red2__  \u"
-    local __host__="$__gre2__  @\H"
+    local __datetime__="$__cya1__  \D{%F, %T}"
+    local __user__="$__red1__  ~\u"
+    local __host__="$__gre1__  @\H"
     local __dirpath__="$__mag2__  :\w"
-    local __jobs__="$__whi2__  \!:\#:\j:\l"
-    local __gitps__='$(__git_ps1 " 🙼  (%s)")'
-    local __dirname__="$__yel2__  \W"$__gitps__
+    local __jobs__="$__whi1__  \!:\#:\l:\j"
+    local __gitps__='`__git_ps1 " 🙼  %s"`'
+    local __dirname__="$__yel1__  \W"$__gitps__
     local __rootmark__="$__blu2__  \$"
 
-    PS1="$__rese__$__cya0__ $__beg__$__rese__$__datetime__ $__sep__$__user__ $__sep__$__host__ $__sep__$__dirpath__ $__mag1__$__end__$__rese__\n$__rese__$__prb__$__whi0__$__beg__$__rese__$__jobs__ $__sep__$__dirname__ $__sep__$__rootmark__ $__blu1__$__end__$__rese__  "
-    PS2="\e[0m\e[7;49;31m$__ps2__ $__end__\e[0m "
-    PS3="\e[0m\e[7;49;32m$__ps3__ $__end__\e[0m "
-    PS4="\e[0m\e[7;49;34m$__ps4__ $__end__\e[0m "
+    PS1="$__rese__$__cya0__ $__beg__$__datetime__ $__sep__$__user__ $__sep__$__host__ $__sep__$__dirpath__ $__mag1__$__end__$__rese__\n$__rese__$__whi0__$__beg__$__jobs__ $__sep__$__dirname__ $__sep__$__rootmark__ $__blu1__$__end__$__rese__  "
+    PS2="$__rese__$__red1__$__ps2__ $__end__$__rese__ "
+    PS3="$__rese__$__gre1__$__ps3__ $__end__$__rese__ "
+    PS4="$__rese__$__blu1__$__ps4__ $__end__$__rese__ "
 }
 # *****************************************************************************
 
@@ -330,4 +340,4 @@ __init_aliases__ && unset -f __init_aliases__
 __init_prompts__ && unset -f __init_prompts__
 # *****************************************************************************
 
-# EOF
+## EOF
