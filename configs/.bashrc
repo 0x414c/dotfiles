@@ -200,6 +200,7 @@ function __init_aliases__ {
     alias vact="source ./bin/activate"
     alias apaclog="tail -f /var/log/apache2/access_log"
     alias swatch="bundle exec sass --watch --sourcemap=none ."
+	alias ducsh="du -csh * | sort -rh"
 
     alias mkgrub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
     alias mkcpio="sudo mkinitcpio -p linux"
