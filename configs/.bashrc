@@ -175,7 +175,7 @@ function __init_aliases__ {
     ## Make some commands more comfortable to use
     alias mkdir="mkdir -pv"
     alias ..="cd ./../"
-    alias ....="cd ./../../"
+    alias ...="cd ./../../"
     alias .-="cd -"
 
     ## Shortcuts...
@@ -183,7 +183,8 @@ function __init_aliases__ {
     alias gi="grep -i"
     alias t="time"
     alias h="history"
-    alias cls="clear"
+	alias l="less"
+	alias cls="clear"
     alias rst="reset"
     alias lo="logout"
     alias cmx="chmod +x"
@@ -195,13 +196,13 @@ function __init_aliases__ {
     alias gl="git log"
 
     ## Yet another shortcuts...
-    alias pgs="sudo su - postgres"
-    alias dtest="python2 ./manage.py runserver"
-    alias vact="source ./bin/activate"
+    alias pgsh="sudo su - postgres"
+    alias djtst="python2 ./manage.py runserver"
+    alias veact="source ./bin/activate"
     alias apaclog="tail -f /var/log/apache2/access_log"
-    alias swatch="bundle exec sass --watch --sourcemap=none ."
+    alias sassw="bundle exec sass --watch --sourcemap=none ."
 	alias ducsh="du -csh * | sort -rh"
-
+	
     alias mkgrub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
     alias mkcpio="sudo mkinitcpio -p linux"
 
