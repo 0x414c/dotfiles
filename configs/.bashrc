@@ -11,8 +11,8 @@
 
 # ***************************** Pick up system defaults ***********************
 function __use_system_bashrc__ {
-    # [ -r /etc/bashrc ] && . /etc/bashrc # Not for Arch
-    [ -r /etc/bash.bashrc ] && . /etc/bash.bashrc
+    # [[ -r /etc/bashrc ]] && source /etc/bashrc # Not for Arch
+    [[ -r /etc/bash.bashrc ]] && source /etc/bash.bashrc
 }
 # *****************************************************************************
 
@@ -20,12 +20,13 @@ function __use_system_bashrc__ {
 # ***************************** Add some bash helpers... **********************
 function __use_system_helpers__ {
     # [ -r /etc/bash_completion ] && . /etc/bash_completion # Not for Arch
-    [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion || echo "bash_completion not found"
-    [ -r /usr/share/doc/pkgfile/command-not-found.bash ] && . /usr/share/doc/pkgfile/command-not-found.bash || echo "command-not-found.bash not found"
-    [ -r /usr/share/git/completion/git-completion.bash ] && . /usr/share/git/completion/git-completion.bash || echo "git-completion.bash not found"
-    [ -r /usr/share/git/completion/git-prompt.sh ] && . /usr/share/git/completion/git-prompt.sh || echo "git-prompt.sh not found"
+    [[ -r /usr/share/bash-completion/bash_completion ]] && source /usr/share/bash-completion/bash_completion || echo "bash_completion not found"
+    [[ -r /usr/share/doc/pkgfile/command-not-found.bash ]] && source /usr/share/doc/pkgfile/command-not-found.bash || echo "command-not-found.bash not found"
+    [[ -r /usr/share/git/completion/git-completion.bash ]] && source /usr/share/git/completion/git-completion.bash || echo "git-completion.bash not found"
+    [[ -r /usr/share/git/completion/git-prompt.sh ]] && source /usr/share/git/completion/git-prompt.sh || echo "git-prompt.sh not found"
+
     ## Configure Git prompt
-    ## NOTE: For decriptions see `git-prompt.sh'
+    ## NOTE: For variables descriptions see comments in `git-prompt.sh'
     GIT_PS1_SHOWDIRTYSTATE=1
     GIT_PS1_SHOWSTASHSTATE=1
     GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -71,14 +72,14 @@ function __init_env_vars__ {
 
     ## Contains the command to run the lightweight program used for editing files
     ## The editor program called by `sudoedit', `vipw', and other such programs when you tell them to edit a file
-    if [ -n "$DISPLAY" ]; then export EDITOR="gedit"; else export EDITOR="nano"; fi
+    if [[ -n "$DISPLAY" ]]; then export EDITOR="gedit"; else export EDITOR="nano"; fi
 
     ## Contains command to run the full-fledged editor that is used for more demanding tasks
     ## Many programs, including `less' and `crontab', will invoke VISUAL to edit a file, falling back to `EDITOR' if `VISUAL' is not set - but others invoke `EDITOR' directly
-    if [ -n "$DISPLAY" ]; then export VISUAL="subl3"; else export EDITOR="ne"; fi
+    if [[ -n "$DISPLAY" ]]; then export VISUAL="subl3"; else export EDITOR="ne"; fi
 
     ## Contains the path to the web browser
-    if [ -n "$DISPLAY" ]; then export BROWSER="firefox"; else export BROWSER="lynx"; fi
+    if [[ -n "$DISPLAY" ]]; then export BROWSER="firefox"; else export BROWSER="lynx"; fi
 
     ## POSIX-compliant mode
     # export POSIXLY_CORRECT=1 # NOTE: conflicts w/ `yaourt'
@@ -90,7 +91,6 @@ function __init_env_vars__ {
 function __init_shell_opts__ {
     ## NOTE: See `http://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html'
     HISTFILE=$HOME/.bash_history
-    HISTFILE2=$HOME/.bash_history-
     HISTFILESIZE=50000
     HISTSIZE=50000
     HISTCONTROL=ignoredups:ignorespace:erasedups
@@ -151,7 +151,7 @@ function __init_aliases__ {
     alias grep="grep --color=auto"
     alias egrep="egrep --color=auto"
     alias fgrep="fgrep --color=auto"
-    [ `command -v colordiff 1>/dev/null 2>&1` ] && alias diff="colordiff"
+    [[ $(command -v colordiff 1>/dev/null 2>&1) ]] && alias diff="colordiff"
 
     ## For interactive & verbose file operations...
     alias rm="rm -iv"
@@ -183,15 +183,15 @@ function __init_aliases__ {
     alias gi="grep -i"
     alias t="time"
     alias h="history"
-	alias l="less"
-	alias cls="clear"
+    alias l="less"
+    alias cls="clear"
     alias rst="reset"
     alias lo="logout"
     alias cmx="chmod +x"
     alias snn="sudo nano"
     alias ssc="sudo systemctl"
     alias rscpy="rsync --progress --human-readable --verbose --archive --recursive"
-	alias whence="type -a"
+    alias whence="type -a"
     alias gc="git clone"
     alias gl="git log"
 
@@ -201,7 +201,7 @@ function __init_aliases__ {
     alias veact="source ./bin/activate"
     alias apaclog="tail -f /var/log/apache2/access_log"
     alias sassw="bundle exec sass --watch --sourcemap=none ."
-	alias ducsh="du -csh * | sort -rh"
+    alias ducsh="du -csh * | sort -rh"
 	
     alias mkgrub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
     alias mkcpio="sudo mkinitcpio -p linux"
@@ -243,13 +243,15 @@ function __init_aliases__ {
     alias pacmir="sudo pacman -Syy"             # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
     alias pacown="pacman -Qo"                   # Which package owns a file?
     alias pacopt="sudo pacman -Sc && sudo pacman-optimize" # Optimize pacman database
+
+    alias yaupg="yaourt -Syua"
 }
 # *****************************************************************************
 
 
 # ***************************** And some handy funcs... ***********************
 function __use_user_helpers__ {
-    [ -r $HOME/.bash_helpers ] && . $HOME/.bash_helpers || echo "$HOME/.bash_helpers not found"
+    [[ -r $HOME/.bash_helpers ]] && source $HOME/.bash_helpers || echo "$HOME/.bash_helpers not found"
 }
 # *****************************************************************************
 
@@ -321,11 +323,11 @@ function __init_prompts__ {
     local __host__="$__gre1__  @\H"
     local __dirpath__="$__mag2__  :\w"
     local __jobs__="$__whi1__  \!:\#:\l:\j"
-    local __gitps__='`__git_ps1 " 🙼  %s"`'
+    local __gitps__='$(__git_ps1 " 🙼  %s")'
     local __dirname__="$__yel1__  \W"$__gitps__
-    local __rootmark__="$__blu2__  \$"
+    local __usermark__="$__blu2__  \$"
 
-    PS1="$__rese__$__cya0__ $__beg__$__datetime__ $__sep__$__user__ $__sep__$__host__ $__sep__$__dirpath__ $__mag1__$__end__$__rese__\n$__rese__$__whi0__$__beg__$__jobs__ $__sep__$__dirname__ $__sep__$__rootmark__ $__blu1__$__end__$__rese__  "
+    PS1="$__rese__$__cya0__ $__beg__$__datetime__ $__sep__$__user__ $__sep__$__host__ $__sep__$__dirpath__ $__mag1__$__end__$__rese__\n$__rese__$__whi0__$__beg__$__jobs__ $__sep__$__dirname__ $__sep__$__usermark__ $__blu1__$__end__$__rese__  "
     PS2="$__rese__$__red1__$__ps2__ $__end__$__rese__ "
     PS3="$__rese__$__gre1__$__ps3__ $__end__$__rese__ "
     PS4="$__rese__$__blu1__$__ps4__ $__end__$__rese__ "

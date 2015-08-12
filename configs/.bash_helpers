@@ -64,6 +64,7 @@ function extract {
 }
 
 ## Compiles source file w/ GCC
+## USAGE: ccc FILE
 function ccc {
     [[ $1 ]]    || { echo "Missing operand" >&2; return 1; }
     [[ -r $1 ]] || { printf "File %s does not exist or is not readable\n" "$1" >&2; return 1; }
@@ -75,45 +76,66 @@ function ccc {
 }
 
 ## Checks if particular command exists in the system
+## USAGE: cmd_exists COMMAND
 function cmd_exists {
     command -pv "$1" >/dev/null 2>&1
 }
 
 ## Prints horizontal separator line
+## USAGE: hr ['CHAR']
 function hr {
 ## "*" "═" "▬" "━"
-    command yes '━' 2>/dev/null | head -n $COLUMNS | tr -d '\n'
-
-    return 0
+    [[ -z "$1" ]] && local ch="━" || local ch="$1"
+    yes "$ch" | head -n $COLUMNS | tr -d '\n'
 }
 
-## Search manpage given in argument `1' for term given in argument `2' (case insensitive)
+## Search manpage given in argument `$1' for term given in argument `$2' (case insensitive)
 ## displays paginated result with colored search terms and two lines surrounding each hit
+## USAGE: manf PAGE TERM
 function manf {
-    man $1 | grep -iC2 $2 | less
-
-    return 0
+    man "$1" | grep -iC2 "$2" | less
 }
 
 ## Makes a new dir and cds into it
+## USAGE: mkcd DIRECTORY
 function mkcd {
     mkdir -pv "$1" && cd "$1"
-
-    return 0
 }
 
 ## Makes history backup
 function backup_history {
-    [ ! -f $HISTFILE ] && touch $HISTFILE
-    [ ! -f $HISTFILE2 ] && touch $HISTFILE2
-    cp $HISTFILE $HISTFILE2 1>/dev/null 2>&1
-
-    return 0
+    [[ ! -f "$HISTFILE" ]] && touch "$HISTFILE"
+    [[ ! -f "$HISTFILE2" ]] && touch "$HISTFILE-"
+    cp "$HISTFILE" "$HISTFILE-" 1>/dev/null 2>&1
 }
 
 ## See `https://gist.github.com/lelandbatey/8677901'
+## USAGE: wb_clean INPUT OUTPUT
 function wb_clean {
 	convert "$1" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "$2"
+}
+
+## Notifies user when specified command finishes executing
+## USAGE: alert [COMMAND [ARGS...]]
+## NOTE: for icon names
+## see `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'
+function alert {
+    local summary="$@"
+    local start=$(date +%s)
+    eval '$@'
+    local retcode="$?"
+    notify-send --urgency=normal --icon=utilities-terminal --expire-time=0 "Finished \"$summary\"." "Time elapsed: $(($(date +%s) - start)) seconds.\nReturn code: $retcode."
+}
+
+## Quick timer
+## USAGE: timer [NUMBER[SUFFIX]]
+## SUFFIX may be `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
+## If no argument is given, the default timespan will be 5 minutes.
+function timer {
+    [[ -z "$1" ]] && local duration="5s" || local duration="$1"
+    sleep $duration
+    tput bel
+    notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "$duration expired."
 }
 
 ## Welcome message pt. I
@@ -122,8 +144,6 @@ function welcome_msg {
 #    echo -en '\n'
     command fortune -a | fmt -75 -s | cowsay -n -f tux
 #    echo -en '\n'
-
-    return 0
 }
 
 # EOF
