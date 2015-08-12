@@ -170,13 +170,14 @@ function __init_aliases__ {
     alias la="ls -A --color=auto"                 # all but . and ..
     alias lc="ls -C --color=auto"                 # classify + columns
     alias l.="ls -d .* --color=auto"              # dotfiles
-    alias lr='ls -R | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less' # full recursive directory listing
+    alias lr='ls -AR | grep ":$" | sed -e '\''s/:$//'\'' -e '\''s/[^-][^\/]*\//--/g'\'' -e '\''s/^/   /'\'' -e '\''s/-/|/'\'' | less' # full recursive directory listing
 
     ## Make some commands more comfortable to use
     alias mkdir="mkdir -pv"
     alias ..="cd ./../"
     alias ...="cd ./../../"
     alias .-="cd -"
+    alias .~="cd ~"
 
     ## Shortcuts...
     alias g="grep"
@@ -194,14 +195,20 @@ function __init_aliases__ {
     alias whence="type -a"
     alias gc="git clone"
     alias gl="git log"
+    alias fm="ranger"
 
     ## Yet another shortcuts...
+    alias fcnt="echo $(ls -1 | wc -l)"
+    alias fnd="find . -name"
+    alias ups="ps -u $USER -o pid,%cpu,%mem,start,time,bsdtime,command"
+    alias pidof="lsof -t -c"
+    alias ducsh="du -csh * | sort -rh"
+
     alias pgsh="sudo su - postgres"
     alias djtst="python2 ./manage.py runserver"
     alias veact="source ./bin/activate"
     alias apaclog="tail -f /var/log/apache2/access_log"
     alias sassw="bundle exec sass --watch --sourcemap=none ."
-    alias ducsh="du -csh * | sort -rh"
 	
     alias mkgrub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
     alias mkcpio="sudo mkinitcpio -p linux"
