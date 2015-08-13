@@ -132,7 +132,7 @@ function alert {
 ## SUFFIX may be `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
 ## If no argument is given, the default timespan will be 5 minutes.
 function timer {
-    [[ -z "$1" ]] && local duration="5s" || local duration="$1"
+    [[ -z "$1" ]] && local duration="5m" || local duration="$1"
     sleep $duration
     tput bel
     notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "$duration expired."
