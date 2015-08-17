@@ -5,7 +5,7 @@
 #
 
 ## Pick up all the stuff from user's config if it's present
-[[ -r ~/.bashrc ]] && source ~/.bashrc
+[[ -r $HOME'/.bashrc' ]] && source $HOME'/.bashrc'
 
 ## Set user-specific env. vars
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on"
