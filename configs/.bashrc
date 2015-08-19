@@ -10,11 +10,11 @@
 
 ## Tries to `source' all the files whose
 ## names provided as function arguments
-## USAGE: __include__ [FILE1[FILE2...]]
+## USAGE: __include__ [FILE1 [FILE2...]]
 ## Return codes:
 ## `2' if one or more files is not readable,
 ## `1' if no args provided
-## `0' if all the provided files was imported
+## `0' if all the provided files was successfully sourced
 function __source__ {
     [[ -z "$@" ]] && return 1
 
@@ -23,7 +23,8 @@ function __source__ {
     for file in "$@"
         do 
             if [[ -r "$file" ]]; then
-                source "$file"            
+                source "$file"
+				retcode=$?
             else 
                 echo '__include__: not readable: '$file
                 retcode=2
@@ -239,9 +240,9 @@ function __init_aliases__ {
 
     ## Yet another shortcuts...
     alias fcnt='echo $(ls -1 | wc -l)'
-    alias fnd='find . -name'
-    alias ups='ps -u $USER -o pid,%cpu,%mem,start,time,bsdtime,command'
-    alias pidof="lsof -t -c $1"
+    alias fnd="find . -name "$1""
+    alias ups="ps -u "$USER" -o pid,%cpu,%mem,start,time,bsdtime,command"
+    alias pidof="lsof -t -c "$1""
     alias ducsh='du -csh * | sort -rh'
 
     alias pgsh='sudo su - postgres'
