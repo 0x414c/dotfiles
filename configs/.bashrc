@@ -101,6 +101,10 @@ function __init_env_vars__ {
     ## Location of `readline' config file
     export INPUTRC=$HOME'/.inputrc'
 
+	## `ccache' configuration
+    export USE_CCACHE=1 
+    export CCACHE_DIR=$HOME'/.ccache'
+
     ## Contains the command to run the lightweight program used for editing files
     ## The editor program called by `sudoedit', `vipw', and other such programs when you tell them to edit a file
     if [[ -n "$DISPLAY" ]]; then export EDITOR='gedit'; else export EDITOR='nano'; fi
