@@ -89,7 +89,7 @@ function __init_env_vars__ {
     export GREP_COLORS='ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36'
 
     ## Options (for `less', ofc) are also taken from the environment variable `LESS'
-    export LESS='C'
+    export LESS='CR'
 
     ## Contains command to run the program used to list the contents of files
     ## The pager called by man and other such programs when you tell them to view a file
