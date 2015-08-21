@@ -145,6 +145,12 @@ function ddgz {
     [[ -n "$1" ]] && [[ -n "$2" ]] && dd if="$1" conv=sync,noerror,notrunc,excl bs=8192K | gzip -c > "$2" || return 1
 }
 
+## Prints prompt for `virtualenv'
+## USAGE: __venv_ps1 FORMAT_STRING 
+function __venv_ps1 {
+    [[ -n "$VIRTUAL_ENV" ]] && printf "$1" "$(basename $VIRTUAL_ENV)"
+}
+
 ## Welcome message pt. I
 function welcome_msg {
 #    fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n

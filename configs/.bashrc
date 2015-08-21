@@ -59,7 +59,7 @@ function __use_system_helpers__ {
     GIT_PS1_SHOWSTASHSTATE=1
     GIT_PS1_SHOWUNTRACKEDFILES=1
     GIT_PS1_SHOWUPSTREAM='name'
-    GIT_PS1_STATESEPARATOR=' 🙼  '
+    GIT_PS1_STATESEPARATOR=':'
     GIT_PS1_DESCRIBE_STYLE='default'
     GIT_PS1_SHOWCOLORHINTS=1
 }
@@ -104,6 +104,9 @@ function __init_env_vars__ {
 	## `ccache' configuration
     export USE_CCACHE=1 
     export CCACHE_DIR=$HOME'/.ccache'
+
+    ## For `virtualenv'
+    export VIRTUAL_ENV_DISABLE_PROMPT=1
 
     ## Contains the command to run the lightweight program used for editing files
     ## The editor program called by `sudoedit', `vipw', and other such programs when you tell them to edit a file
@@ -366,14 +369,15 @@ function __init_prompts__ {
     # \\        A backslash
     # \[        This sequence should appear before a sequence of characters that don't move the cursor (like color escape sequences). This allows bash to calculate word wrapping correctly.
     # \]        This sequence should appear after a sequence of non-printing characters.
-    local __datetime__="$__cya1__  \D{%F, %T}"
+    local __datetime__="$__cya1__  \D{%T}"
     local __user__="$__red1__  ~\u"
     local __host__="$__gre1__  @\H"
     local __dirpath__="$__mag2__  :\w"
     local __is_last_successful__='$([[ $? == 0 ]] && echo '✔' || echo '✘')'
-    local __jobs_and_status__="$__whi1__  \!:\#:\l:\j:"$__is_last_successful__
-    local __git_ps__='$(__git_ps1 " 🙼  %s")'
-    local __dirname__="$__yel1__  \W"$__git_ps__
+    local __jobs_and_status__="$__whi1__  \!:\#:\j:"$__is_last_successful__
+    local __git_ps__='$(__git_ps1 " 🙼  git:%s")'
+    local __venv_ps__='$(__venv_ps1 " 🙼  venv:%s")'
+    local __dirname__="$__yel1__  \W"$__git_ps__$__venv_ps__
     local __usermark__="$__blu2__  \$"
 
     PS1="$__rese__$__cya0__ $__beg__$__datetime__ $__sep__$__user__ $__sep__$__host__ $__sep__$__dirpath__ $__mag1__$__end__$__rese__\n$__rese__$__whi0__$__beg__$__jobs_and_status__ $__sep__$__dirname__ $__sep__$__usermark__ $__blu1__$__end__$__rese__  "
