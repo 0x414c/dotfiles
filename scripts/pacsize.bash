@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+## Lists installed packages w/ sorting by size
 ( echo "PACKAGE SIZE(K)";
 for A in /var/lib/pacman/local/*/desc; do
   egrep -A1 '%(NAME|SIZE)' $A  \
