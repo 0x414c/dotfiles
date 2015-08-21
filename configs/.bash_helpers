@@ -138,6 +138,12 @@ function timer {
     notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "$duration expired."
 }
 
+## Reads a file using `dd' and compresses it w/ `gzip'
+## USAGE: ddgz FILE FILE.gz
+function ddgz {
+    [[ -n "$1" ]] && [[ -n "$2" ]] && dd if="$1" conv=sync,noerror,notrunc,excl bs=8192K | gzip -c > "$2" || return 1
+}
+
 ## Welcome message pt. I
 function welcome_msg {
 #    fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
