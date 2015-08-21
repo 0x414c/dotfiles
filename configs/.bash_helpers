@@ -124,6 +124,7 @@ function alert {
     local start=$(date +%s)
     eval '$@'
     local retcode="$?"
+    tput bel
     notify-send --urgency=normal --icon=utilities-terminal --expire-time=0 "Finished \"$summary\"." "Time elapsed: $(($(date +%s) - start)) seconds.\nReturn code: $retcode."
 }
 
