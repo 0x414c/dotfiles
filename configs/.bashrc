@@ -234,26 +234,32 @@ function __init_aliases__ {
     alias cmx='chmod +x'
     alias snn='sudo nano'
     alias ssc='sudo systemctl'
-    alias rscpy='rsync --progress --human-readable --verbose --archive --recursive'
-    alias whence='type -a'
+    alias rscp='rsync --progress --human-readable --verbose --archive --recursive'
     alias gc='git clone'
     alias gl='git log'
     alias gu='git pull'
     alias gp='git push'
+    alias gr='gradle run'
+    alias ga='gradle assemble'
+    alias gc='gradle clean'
     alias fm='ranger'
 
     ## Yet another shortcuts...
     alias fcnt='echo $(ls -1 | wc -l)'
-    alias fnd="find . -name "$1""
-    alias ups="ps -u "$USER" -o pid,%cpu,%mem,start,time,bsdtime,command"
-    alias pidof="lsof -t -c "$1""
+    alias fnd='find . -name'
+    alias ups='ps -u "$USER" -o pid,%cpu,%mem,start,time,bsdtime,command'
+    alias pidof='lsof -t -c'
     alias ducsh='du -csh * | sort -rh'
+	alias whence='type -a'
 
     alias pgsh='sudo su - postgres'
     alias djtst='python2 ./manage.py runserver'
     alias veact='source ./bin/activate'
     alias apaclog='tail -f /var/log/apache2/access_log'
     alias sassw='bundle exec sass --watch --sourcemap=none .'
+
+    alias rsy='repo sync -f -j10'
+    alias bes='source ./build/envsetup.sh'
 	
     alias mkgrub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
     alias mkcpio='sudo mkinitcpio -p linux'
@@ -261,14 +267,11 @@ function __init_aliases__ {
     alias bigtmp='sudo mount -o remount,size=4G,noatime /tmp'
     alias rfrc='source $HOME/.bashrc'
 
-    alias rsy='repo sync -f -j10'
-    alias bes='source ./build/envsetup.sh'
-
     alias shu='sudo shutdown -h now'
     alias reb='sudo shutdown -r now'
     alias kreb='sudo kexec -l /boot/vmlinuz-linux --initrd=/boot/initramfs-linux.img --reuse-cmdline; sudo kexec -e'
 
-    ## And don't forget 'bout Pacman...
+    ## And don't forget about `pacman'...
     alias pacupg='sudo pacman -Syu'		# Synchronize with repositories and then upgrade packages that are out of date on the local system.
     alias pacin='sudo pacman -S'		# Install specific package(s) from the repositories
     alias pacins='sudo pacman -U'		# Install specific package not from the repositories but from a file
@@ -296,7 +299,7 @@ function __init_aliases__ {
     alias pacown='pacman -Qo'                   # Which package owns a file?
     alias pacopt='sudo pacman -Sc && sudo pacman-optimize' # Optimize pacman database
 
-    alias yaupg='yaourt -Syua'
+    alias yaupg='yaourt -Syua'                  # Upgrade whole system w/ `yaourt'
 }
 # *****************************************************************************
 
