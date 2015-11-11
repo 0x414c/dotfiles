@@ -205,6 +205,7 @@ function __init_aliases__ {
     alias gcc='gcc -fdiagnostics-color=auto'
     alias dmesg='dmesg --color=auto'
     alias pacman='pacman --color=auto'
+    alias yaourt='yaourt --color=auto'
 
     ## For interactive & verbose file operations...
     alias rm='rm -iv'
