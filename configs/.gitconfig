@@ -2,7 +2,7 @@
 	name = 0x414c!
 	email = 0x414c@gmail.com
 [color]
-	ui = true
+	ui = auto
 [color "branch"]
     current = yellow reverse
     local = yellow
@@ -16,6 +16,8 @@
     added = yellow
     changed = green
     untracked = cyan
+[url "https://"]
+	insteadOf = git://
 [merge]
     conflictstyle = diff3
 [filter "lfs"]
