@@ -133,8 +133,8 @@ function __init_env_vars__ {
 function __init_shell_opts__ {
     ## NOTE: See `http://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html'
     HISTFILE=$HOME'/.bash_history'
-    HISTFILESIZE=50000
-    HISTSIZE=50000
+    HISTFILESIZE=-1
+    HISTSIZE=-1
     HISTCONTROL='ignoredups:ignorespace:erasedups'
     HISTIGNORE=$'[ \t]*:&:[fb]g:exit:ls *:ls'
     IFS=$' \n\t'
