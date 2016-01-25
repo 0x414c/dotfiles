@@ -305,13 +305,14 @@ function __init_aliases__ {
     alias pacro2="pacman -Qtdq 1>/dev/null && sudo pacman -Rns \$(pacman -Qtdq | sed -e ':a;N;\$!ba;s/\n/ /g')"
 
     ## Additional pacman alias examples
-    alias pacupd='sudo pacman -Sy && sudo abs'  # Update and refresh the local package and ABS databases against repositories
-    alias pacinsd='sudo pacman -S --asdeps'     # Install given package(s) as dependencies
-    alias pacmir='sudo pacman -Syy'             # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
-    alias pacown='pacman -Qo'                   # Which package owns a file?
+    alias pacupd='sudo pacman -Sy && sudo abs'   # Update and refresh the local package and ABS databases against repositories
+    alias pacinsd='sudo pacman -S --asdeps'      # Install given package(s) as dependencies
+    alias pacmir='sudo pacman -Syy'              # Force refresh of all package lists after updating /etc/pacman.d/mirrorlist
+    alias pacown='pacman -Qo'                    # Which package owns a file?
     alias pacopt='sudo pacman -Sc && sudo pacman-optimize' # Optimize pacman database
 
-    alias yaupg='yaourt -Syua'                  # Upgrade whole system w/ `yaourt'
+    alias yaupg='sudo yaourt -Syu'               # Upgrade whole system w/ `yaourt'
+    alias pacrk='sudo pacman-key --refresh-keys' # Refresh keychain
 }
 # *****************************************************************************
 
