@@ -21,11 +21,11 @@ function __source__ {
     local retcode=0
 
     for file in "$@"
-        do 
+        do
             if [[ -r "$file" ]]; then
                 source "$file"
-				retcode=$?
-            else 
+                retcode=$?
+            else
                 echo '__include__: not readable: '$file
                 retcode=2
             fi
@@ -51,8 +51,11 @@ function __use_user_helpers__ {
 
 # ***************************** Add some bash helpers... **********************
 function __use_system_helpers__ {
-    __source__ '/usr/share/bash-completion/bash_completion' '/usr/share/doc/pkgfile/command-not-found.bash' '/usr/share/git/completion/git-completion.bash' '/usr/share/git/completion/git-prompt.sh'
-    
+    __source__ '/usr/share/bash-completion/bash_completion' \
+               '/usr/share/doc/pkgfile/command-not-found.bash' \
+               '/usr/share/git/completion/git-completion.bash' \
+               '/usr/share/git/completion/git-prompt.sh'
+
     ## Configure Git prompt
     ## NOTE: For variables descriptions see comments in `git-prompt.sh'
     GIT_PS1_SHOWDIRTYSTATE=1
@@ -105,8 +108,8 @@ function __init_env_vars__ {
     ## Location of `readline' config file
     export INPUTRC=$HOME'/.inputrc'
 
-	## `ccache' configuration
-    export USE_CCACHE=1 
+    ## `ccache' configuration
+    export USE_CCACHE=1
     export CCACHE_DIR=$HOME'/.ccache'
 
     ## For `virtualenv'
@@ -255,6 +258,7 @@ function __init_aliases__ {
     alias ga='gradle assemble'
     alias gc='gradle clean'
     alias fm='ranger'
+    alias mp='makepkg'
 
     ## Yet another shortcuts...
     alias fcnt='echo $(ls -1 | wc -l)'
@@ -262,7 +266,7 @@ function __init_aliases__ {
     alias ups='ps -u "$USER" -o pid,%cpu,%mem,start,time,bsdtime,command'
     alias pidof='lsof -t -c'
     alias ducsh='du -csh * | sort -rh'
-	alias whence='type -a'
+    alias whence='type -a'
 
     alias pgsh='sudo su - postgres'
     alias djtst='python2 ./manage.py runserver'
@@ -272,7 +276,7 @@ function __init_aliases__ {
 
     alias rsy='repo sync -f -j10'
     alias bes='source ./build/envsetup.sh'
-	
+
     alias mkgrub='sudo grub-mkconfig -o /boot/grub/grub.cfg'
     alias mkcpio='sudo mkinitcpio -p linux'
 
@@ -284,20 +288,20 @@ function __init_aliases__ {
     alias kreb='sudo kexec -l /boot/vmlinuz-linux --initrd=/boot/initramfs-linux.img --reuse-cmdline; sudo kexec -e'
 
     ## And don't forget about `pacman'...
-    alias pacupg='sudo pacman -Syu'		# Synchronize with repositories and then upgrade packages that are out of date on the local system.
-    alias pacin='sudo pacman -S'		# Install specific package(s) from the repositories
-    alias pacins='sudo pacman -U'		# Install specific package not from the repositories but from a file
-    alias pacre='sudo pacman -R'		# Remove the specified package(s), retaining its configuration(s) and required dependencies
-    alias pacrem='sudo pacman -Rns'		# Remove the specified package(s), its configuration(s) and unneeded dependencies
-    alias pacrep='pacman -Si'		    # Display information about a given package in the repositories
-    alias pacreps='pacman -Ss'		    # Search for package(s) in the repositories
-    alias pacloc='pacman -Qi'		    # Display information about a given package in the local database
-    alias paclocs='pacman -Qs'		    # Search for package(s) in the local database
-    alias paclo='pacman -Qdt'		    # List all packages which are orphaned
-    alias pacc='sudo pacman -Scc'		# Clean cache - delete all not currently installed package files
-    alias paclf='pacman -Ql'		    # List all files installed by a given package
-    alias pacexpl='pacman -D --asexp'	# Mark one or more installed packages as explicitly installed
-    alias pacimpl='pacman -D --asdep'	# Mark one or more installed packages as non explicitly installed
+    alias pacupg='sudo pacman -Syu'     # Synchronize with repositories and then upgrade packages that are out of date on the local system.
+    alias pacin='sudo pacman -S'        # Install specific package(s) from the repositories
+    alias pacins='sudo pacman -U'       # Install specific package not from the repositories but from a file
+    alias pacre='sudo pacman -R'        # Remove the specified package(s), retaining its configuration(s) and required dependencies
+    alias pacrem='sudo pacman -Rns'     # Remove the specified package(s), its configuration(s) and unneeded dependencies
+    alias pacrep='pacman -Si'           # Display information about a given package in the repositories
+    alias pacreps='pacman -Ss'          # Search for package(s) in the repositories
+    alias pacloc='pacman -Qi'           # Display information about a given package in the local database
+    alias paclocs='pacman -Qs'          # Search for package(s) in the local database
+    alias paclo='pacman -Qdt'           # List all packages which are orphaned
+    alias pacc='sudo pacman -Scc'       # Clean cache - delete all not currently installed package files
+    alias paclf='pacman -Ql'            # List all files installed by a given package
+    alias pacexpl='pacman -D --asexp'   # Mark one or more installed packages as explicitly installed
+    alias pacimpl='pacman -D --asdep'   # Mark one or more installed packages as non explicitly installed
 
     ## For recursively removing orphans and their configuration files
     alias pacro='sudo pacman -Rns $(pacman -Qtdq)'
@@ -311,8 +315,9 @@ function __init_aliases__ {
     alias pacown='pacman -Qo'                    # Which package owns a file?
     alias pacopt='sudo pacman -Sc && sudo pacman-optimize' # Optimize pacman database
 
-    alias yaupg='sudo yaourt -Syu'               # Upgrade whole system w/ `yaourt'
+    alias yaupg='yaourt -Syua'                   # Upgrade whole system w/ `yaourt'
     alias pacrk='sudo pacman-key --refresh-keys' # Refresh keychain
+    alias paupg='pacaur -Sua'                    # Upgrade AUR packages only
 }
 # *****************************************************************************
 
@@ -320,80 +325,124 @@ function __init_aliases__ {
 # ***************************** And nifty prompts... **************************
 function __init_prompts__ {
     ## Some colors...
-    ## NOTE: For color codes 
-    ## see `../scripts/colors_and_formatting_16.bash'
-    local __rese__='\[\e[0m\]'
-    local __cya0__='\[\e[0;49;36m\]'
-    local __cya1__='\[\e[7;49;36m\]'
-    local __red1__='\[\e[7;49;31m\]'
-    local __gre1__='\[\e[7;49;32m\]'
-    local __mag1__='\[\e[7;49;35m\]'
-    local __mag2__='\[\e[7;107;35m\]'
-    local __whi0__='\[\e[0;49;37m\]'
-    local __whi1__='\[\e[7;49;37m\]'
-    local __yel1__='\[\e[7;49;33m\]'
-    local __blu0__='\[\e[0;49;34m\]'
-    local __blu1__='\[\e[7;49;34m\]'
-    local __blu2__='\[\e[7;107;34m\]'
+    ## NOTE: For color codes reference see:
+    ## `../scripts/colors_and_formatting_16.bash',
+    ## `https://en.wikipedia.org/wiki/ANSI_escape_code'
 
-    ## ...and beautiful chars
-    # ─╳→→↪↠↣→⇨↦↬⊕⟴⇛⇻⇉▶▷●◉◆◇○◈☑☒☐➥➥➦➜➞➡➢➣➤➩➯➮➭➲➨➽─━│┃┆┇┊┋▓▒░▞▚┏┗┃▼▽▶▷◀◁▲△╚═╔═✧✦⭆🢂🡆🞉◙🙼🞮🞓🞧🞿🞺🠶🢜🢝🢞🢟⬤⬛⭙🙾
+    ## String w/ escape char for PS3 (where `Bash' escape sequences aren't supported)
+    local __escape__=$'\e'
 
-    local __beg__='🙼' # prompt begin
-    local __end__='🙼' # prompt end
-    local __arr__='🢂' # arrow
-    local __sep__='🙼' # sections separator
-    local __ps2__='🢂'
-    local __ps3__='🡆'
-    local __ps4__='🠶'
+    ## Text attributes
+    local __anorm__='\[\e[0m\]' ## Reset / Normal
+    local __abold__='\[\e[1m\]' ## Bold / Increased intensity
+    local __afain__='\[\e[2m\]' ## Faint / Decreased intensity
+    local __aital__='\[\e[3m\]' ## Italic: On
+    local __aunde__='\[\e[4m\]' ## Underline: Single
+    local __ablin__='\[\e[5m\]' ## Blink: Slow
+    local __anega__='\[\e[7m\]' ## Image: Negative
+    local __aconc__='\[\e[8m\]' ## Conceal
+    local __acros__='\[\e[9m\]' ## Crossed-out
+
+    ## Foreground (text) colors
+    local __fgbla__='\[\e[30m\]' ## Black
+    local __fgred__='\[\e[31m\]' ## Red
+    local __fggre__='\[\e[32m\]' ## Green
+    local __fgyel__='\[\e[33m\]' ## Yellow
+    local __fgblu__='\[\e[34m\]' ## Blue
+    local __fgmag__='\[\e[35m\]' ## Magenta
+    local __fgcya__='\[\e[36m\]' ## Cyan
+    local __fgwhi__='\[\e[37m\]' ## White
+    local __fgdef__='\[\e[39m\]' ## Default (Implementation defined)
+
+    ## Background colors
+    local __bgbla__='\[\e[40m\]' ## Black
+    local __bgred__='\[\e[41m\]' ## Red
+    local __bggre__='\[\e[42m\]' ## Green
+    local __bgyel__='\[\e[43m\]' ## Yellow
+    local __bgblu__='\[\e[44m\]' ## Blue
+    local __bgmag__='\[\e[45m\]' ## Magenta
+    local __bgcya__='\[\e[46m\]' ## Cyan
+    local __bgwhi__='\[\e[47m\]' ## White
+    local __bgdef__='\[\e[49m\]' ## Default (Implementation defined)
+
+    ## Foreground (text) high intensity colors
+    local __fhbla__='\[\e[90m\]' ## Black
+    local __fhred__='\[\e[91m\]' ## Red
+    local __fhgre__='\[\e[92m\]' ## Green
+    local __fhyel__='\[\e[93m\]' ## Yellow
+    local __fhblu__='\[\e[94m\]' ## Blue
+    local __fhmag__='\[\e[95m\]' ## Magenta
+    local __fhcya__='\[\e[96m\]' ## Cyan
+    local __fhwhi__='\[\e[97m\]' ## White
+
+    ## Background high intensity colors
+    local __bhbla__='\[\e[100m\]' ## Black
+    local __bhred__='\[\e[101m\]' ## Red
+    local __bhgre__='\[\e[102m\]' ## Green
+    local __bhyel__='\[\e[103m\]' ## Yellow
+    local __bhblu__='\[\e[104m\]' ## Blue
+    local __bhmag__='\[\e[105m\]' ## Magenta
+    local __bhcya__='\[\e[106m\]' ## Cyan
+    local __bhwhi__='\[\e[107m\]' ## White
+
+    ## ...and chars
+    ## ╳ │ ┃ ┆ ┇ ┊ ┋ ▓ ▒ ░ ▞ ▚ ┏ ┗ ┃ ╚ ═ ╔ ═ 🢂 🡆 🞉 🞮 🞓 🞧 🞿 🞺 🠶 🢜 🢝 🢞 🢟 ⬤ ⬛ ⭙ 🙾 🙿 ❚ ❱ 🙼 🙽 🢂 ❯ ✓ ✔ ✗ ✘ ☑ ☒ ☐ ⮀  ➦ ✚ ● ± ☿ ⚙     🔀 ⋯ 🐍 ⓔ ▌ │ ▐ │ ⎇ ● ○
+
+    local __prbe__='░▒▓' ## prompt beginning char
+    local __pren__='▓▒░' ## prompt ending char
+    local __sest__='▒' ## section beginning marker
+    local __seen__='▒' ## section ending marker
+    local __ps2s__='>'
+    local __ps3s__='?'
+    local __ps4s__=':'
 
     ## If set, the value is interpreted as a command to execute before the printing of each primary prompt
-    PROMPT_COMMAND=$PROMPT_COMMAND"; history -a; echo -en '\a\n'; hr; echo -en '\n\n'"
+    PROMPT_COMMAND=$PROMPT_COMMAND"; history -a; echo -en '\a\n'; echo -en '\e[37m'; hr; echo -en '\e[0m'; echo -en '\n\n'"
 
     ## PSs
     ## TODO: powerline-style arrows
     ## NOTE:
-    # Sequence  Description
-    # \a        The ASCII bell character (you can also type \007)
-    # \d        Date in "Wed Sep 06" format
-    # \e        ASCII escape character (you can also type \033)
-    # \h        First part of hostname (such as "mybox")
-    # \H        Full hostname (such as "mybox.mydomain.com")
-    # \j        The number of processes you've suspended in this shell by hitting ^Z
-    # \l        The name of the shell's terminal device (such as "ttyp4")
-    # \n        Newline
-    # \r        Carriage return
-    # \s        The name of the shell executable (such as "bash")
-    # \t        Time in 24-hour format (such as "23:01:01")
-    # \T        Time in 12-hour format (such as "11:01:01")
-    # \@        Time in 12-hour format with am/pm
-    # \u        Your username
-    # \v        Version of bash (such as 2.04)
-    # \V        Bash version, including patchlevel
-    # \w        Current working directory (such as "/home/drobbins")
-    # \W        The "basename" of the current working directory (such as "drobbins")
-    # \!        Current command's position in the history buffer
-    # \#        Command number (this will count up at each prompt, as long as you type something)
-    # \$        If you are not root, inserts a "$"; if you are root, you get a "#"
-    # \xxx      Inserts an ASCII character based on three-digit number xxx (replace unused digits with zeros, such as "\007")
-    # \\        A backslash
-    # \[        This sequence should appear before a sequence of characters that don't move the cursor (like color escape sequences). This allows bash to calculate word wrapping correctly.
-    # \]        This sequence should appear after a sequence of non-printing characters.
-    local __datetime__="$__cya1__  \D{%T}"
-    local __user__="$__red1__  ~\u"
-    local __host__="$__gre1__  @\H"
-    local __dirpath__="$__mag2__  :\w"
-    local __is_last_successful__='$([[ $? == 0 ]] && echo '✔' || echo '✘')'
-    local __jobs_and_status__="$__whi1__  \!:\#:\j:"$__is_last_successful__
-    local __git_ps__='$(__git_ps1 " 🙼  git:%s")'
-    local __venv_ps__='$(__venv_ps1 " 🙼  venv:%s")'
-    local __dirname__="$__yel1__  \W"$__git_ps__$__venv_ps__
-    local __usermark__="$__blu2__  \$"
+    ## Sequence  Description
+    ## \a        The ASCII bell character (you can also type \007)
+    ## \d        Date in "Wed Sep 06" format
+    ## \e        ASCII escape character (you can also type \e)
+    ## \h        First part of hostname (such as "mybox")
+    ## \H        Full hostname (such as "mybox.mydomain.com")
+    ## \j        The number of processes you've suspended in this shell by hitting ^Z
+    ## \l        The name of the shell's terminal device (such as "ttyp4")
+    ## \n        Newline
+    ## \r        Carriage return
+    ## \s        The name of the shell executable (such as "bash")
+    ## \t        Time in 24-hour format (such as "23:01:01")
+    ## \T        Time in 12-hour format (such as "11:01:01")
+    ## \@        Time in 12-hour format with am/pm
+    ## \u        Your username
+    ## \v        Version of bash (such as 2.04)
+    ## \V        Bash version, including patchlevel
+    ## \w        Current working directory (such as "/home/drobbins")
+    ## \W        The "basename" of the current working directory (such as "drobbins")
+    ## \!        Current command's position in the history buffer
+    ## \#        Command number (this will count up at each prompt, as long as you type something)
+    ## \$        If you are not root, inserts a "$"; if you are root, you get a "#"
+    ## \xxx      Inserts an ASCII character based on three-digit number xxx (replace unused digits with zeros, such as "\007")
+    ## \\        A backslash
+    ## \[        This sequence should appear before a sequence of characters that don't move the cursor (like color escape sequences). This allows bash to calculate word wrapping correctly.
+    ## \]        This sequence should appear after a sequence of non-printing characters.
+    local __date__='\D{%T}'
+    local __user__='~\u'
+    local __host__='@\H'
+    local __name__=':\w'
+    local __stat__='$([[ $? == 0 ]] && echo '✔' || echo '✘')'
+    local __jobs__='\!:\#:\j:'$__stat__
+    local __git__="\$(__git_ps1 ' $__sest__ git:%s')"
+    local __venv__="\$(__venv_ps1 ' $__sest__ venv:%s')"
+    local __path__='\W'$__git__$__venv__
+    local __mark__='\$'
 
-    PS1="$__rese__$__cya0__ $__beg__$__datetime__ $__sep__$__user__ $__sep__$__host__ $__sep__$__dirpath__ $__mag1__$__end__$__rese__\n$__rese__$__whi0__$__beg__$__jobs_and_status__ $__sep__$__dirname__ $__sep__$__usermark__ $__blu1__$__end__$__rese__  "
-    PS2="$__rese__$__red1__$__ps2__ $__end__$__rese__ "
-    PS3="$__rese__$__gre1__$__ps3__ $__end__$__rese__ "
-    PS4="$__rese__$__blu1__$__ps4__ $__end__$__rese__ "
+    PS1="$__anorm__  $__fgcya__$__prbe__$__anorm__$__fgbla__$__bgcya__  $__date__  $__fgcya__$__bgbla__$__seen__$__fgbla__$__bgred__$__sest__  $__user__  $__fgred__$__bgbla__$__seen__$__fgbla__$__bggre__$__sest__  $__host__  $__fggre__$__bgbla__$__seen__$__fgbla__$__bgmag__$__sest__$__fgwhi__  $__name__  $__anorm__$__fgmag__$__pren__$__anorm__\n $__fgwhi__$__prbe__$__anorm__$__fgbla__$__bgwhi__  $__jobs__  $__fgwhi__$__bgbla__$__seen__$__fgbla__$__bgyel__$__sest__  $__path__  $__fgyel__$__bgbla__$__seen__$__fgbla__$__bgblu__$__sest__$__fgwhi__  $__mark__  $__anorm__$__fgblu__$__pren__$__anorm__ "
+    PS2=" $__anorm__$__fgbla__$__bgred__ $__ps2s__ $__anorm__ "
+    PS3=" ${__escape__}[30;42m $__ps3s__ ${__escape__}[0m "
+    PS4=" $__anorm__$__fgbla__$__bgblu__ $__ps4s__ $__anorm__ "
 }
 # *****************************************************************************
 

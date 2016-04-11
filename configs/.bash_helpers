@@ -68,9 +68,9 @@ function extract {
 function ccc {
     [[ $1 ]]    || { echo "Missing operand" >&2; return 1; }
     [[ -r $1 ]] || { printf "File %s does not exist or is not readable\n" "$1" >&2; return 1; }
-	local output_path=${TMPDIR:-/tmp}/${1##*/};
-	gcc "$1" -o "$output_path" && "$output_path";
-	rm "$output_path";
+    local output_path=${TMPDIR:-/tmp}/${1##*/};
+    gcc "$1" -o "$output_path" && "$output_path";
+    rm "$output_path";
 
     return 0;
 }
@@ -84,8 +84,8 @@ function cmd_exists {
 ## Prints horizontal separator line
 ## USAGE: hr ['CHAR']
 function hr {
-## "*" "═" "▬" "━"
-    [[ -z "$1" ]] && local ch="━" || local ch="$1"
+    ## = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
+    [[ -z "$1" ]] && local ch='━' || local ch="$1"
     yes "$ch" | head -n $COLUMNS | tr -d '\n'
 }
 
@@ -124,7 +124,7 @@ function backup_history {
 ## See `https://gist.github.com/lelandbatey/8677901'
 ## USAGE: wb_clean INPUT OUTPUT
 function wb_clean {
-	convert "$1" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "$2"
+    convert "$1" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "$2"
 }
 
 ## Notifies user when specified command finishes executing
@@ -158,7 +158,7 @@ function ddgz {
 }
 
 ## Prints prompt for `virtualenv'
-## USAGE: __venv_ps1 FORMAT_STRING 
+## USAGE: __venv_ps1 FORMAT_STRING
 function __venv_ps1 {
     [[ -n "$VIRTUAL_ENV" ]] && printf "$1" "$(basename $VIRTUAL_ENV)"
 }
