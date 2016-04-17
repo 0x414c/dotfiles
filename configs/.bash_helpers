@@ -85,8 +85,13 @@ function cmd_exists {
 ## USAGE: hr ['CHAR']
 function hr {
     ## = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
-    [[ -z "$1" ]] && local ch='━' || local ch="$1"
-    yes "$ch" | head -n $COLUMNS | tr -d '\n'
+    yes "${1:-━}" | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
+}
+
+## Print a horizontal rule
+function hr2 {
+    printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion
+    # printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode properly
 }
 
 ## Search manpage given in argument `$1' for term given in argument `$2' (case insensitive)

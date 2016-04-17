@@ -71,8 +71,8 @@ set visible-stats on
 ## Following will automatically insert closing braces
 "\C-v": quoted-insert
 "\C-b": backward-char
-"(": "\C-v()\C-b"
-"[": "\C-v[]\C-b"
-"{": "\C-v{}\C-b"
-"\"": "\C-v\"\C-v\"\C-b"
-"\047": "\C-v\047\C-v\047\C-b" # for single quote
+# "(": "\C-v()\C-b"
+# "[": "\C-v[]\C-b"
+# "{": "\C-v{}\C-b"
+# "\"": "\C-v\"\C-v\"\C-b"
+# "\047": "\C-v\047\C-v\047\C-b" # for single quote
