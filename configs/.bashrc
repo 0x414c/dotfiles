@@ -329,7 +329,7 @@ function __init_prompts__ {
     ## `../scripts/colors_and_formatting_16.bash',
     ## `https://en.wikipedia.org/wiki/ANSI_escape_code'
 
-    ## String w/ escape char for PS3 (where escape sequences aren't fully supported)
+    ## String w/ escape char for `PS3' and `PS4' (where escape sequences aren't fully supported)
     local __escap__=$'\e'
 
     ## Text attributes
@@ -397,7 +397,7 @@ function __init_prompts__ {
     local __ps4s__=':'
 
     ## If set, the value is interpreted as a command to execute before the printing of each primary prompt
-    PROMPT_COMMAND=$PROMPT_COMMAND"; history -a; echo -n '\a\n'; echo -en '\e[37m'; hr; echo -en '\e[0m'; echo -n '\n\n'"
+    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND; } history -a; echo -en '\a\n'; echo -en '\e[37m'; hr; echo -en '\e[0m'; echo -en '\n\n'"
 
     ## PSs
     ## TODO: powerline-style arrows
@@ -441,8 +441,8 @@ function __init_prompts__ {
 
     PS1="$__anorm__  $__fgcya__$__prbe__$__anorm__$__fgbla__$__bgcya__  $__date__  $__fgcya__$__bgbla__$__seen__$__fgbla__$__bgred__$__sest__  $__user__  $__fgred__$__bgbla__$__seen__$__fgbla__$__bggre__$__sest__  $__host__  $__fggre__$__bgbla__$__seen__$__fgbla__$__bgmag__$__sest__$__fgwhi__  $__name__  $__anorm__$__fgmag__$__pren__$__anorm__\n $__fgwhi__$__prbe__$__anorm__$__fgbla__$__bgwhi__  $__jobs__  $__fgwhi__$__bgbla__$__seen__$__fgbla__$__bgyel__$__sest__  $__path__  $__fgyel__$__bgbla__$__seen__$__fgbla__$__bgblu__$__sest__$__fgwhi__  $__mark__  $__anorm__$__fgblu__$__pren__$__anorm__ "
     PS2=" $__anorm__$__fgbla__$__bgred__ $__ps2s__ $__anorm__ "
-    PS3=" $__escap__[0m$__escap__[30;42m $__ps3s__ $__escap__[0m "
-    PS4=" $__anorm__$__fgbla__$__bgblu__ $__ps4s__ $__anorm__ "
+    PS3=" $__escap__[0m$__escap__[30m$__escap__[42m $__ps3s__ $__escap__[0m "
+    PS4=" $__escap__[0m$__escap__[30m$__escap__[44m $__ps4s__ $__escap__[0m "
 }
 # *****************************************************************************
 

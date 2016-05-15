@@ -94,13 +94,6 @@ function hr2 {
     # printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode properly
 }
 
-## Search manpage given in argument `$1' for term given in argument `$2' (case insensitive)
-## displays paginated result with colored search terms and two lines surrounding each hit
-## USAGE: manf PAGE TERM
-function manf {
-    man "$1" | grep -iC2 "$2" | less
-}
-
 ## Makes manpages colored
 function man {
     env LESS_TERMCAP_mb=$'\E[01;31m' \
@@ -111,6 +104,13 @@ function man {
     LESS_TERMCAP_ue=$'\E[0m' \
     LESS_TERMCAP_us=$'\E[04;38;5;146m' \
     man "$@"
+}
+
+## Search manpage given in argument `$1' for term given in argument `$2' (case insensitive)
+## displays paginated result with colored search terms and two lines surrounding each hit
+## USAGE: manf PAGE TERM
+function manf {
+    man "$1" | grep -iC3 "$2" | less
 }
 
 ## Makes a new dir and cds into it
@@ -150,10 +150,10 @@ function alert {
 ## SUFFIX may be `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
 ## If no argument is given, the default timespan will be 5 minutes.
 function timer {
-    [[ -z "$1" ]] && local duration="5m" || local duration="$1"
-    sleep $duration
+    local __duration__=${1:-5m}
+    sleep $__duration__
     tput bel
-    notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "$duration expired."
+    notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "Timer for $__duration__ expired."
 }
 
 ## Reads a file using `dd' and compresses it w/ `gzip'
