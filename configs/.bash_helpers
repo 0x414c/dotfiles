@@ -5,6 +5,108 @@
 #
 
 
+## Checks if particular command exists in the system
+## USAGE: cmd_exists COMMAND
+function cmd_exists {
+    command -pv "$1" >/dev/null 2>&1
+}
+
+## Prints horizontal separator line
+## USAGE: hr ['CHAR']
+function hr {
+    ## = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
+    yes "${1:-━}" | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
+}
+
+## Print a horizontal rule
+function hr2 {
+    printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion
+    # printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode properly
+}
+
+## Makes manpages colored
+## TODO: Put these vars to `.lesskey' file
+function man {
+    env LESS_TERMCAP_mb=$'\e[01;31m' \
+    LESS_TERMCAP_md=$'\e[01;38;5;74m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[38;5;246m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[04;38;5;146m' \
+    man "$@"
+}
+
+## Search manpage given in argument `$1' for term given in argument `$2' (case insensitive)
+## displays paginated result with colored search terms and seven lines surrounding each hit
+## USAGE: manf PAGE TERM
+function manf {
+    man "$1" | grep -iC7 "$2" --color=always | less -CR
+}
+
+## Makes a new directory and jumps into it
+## USAGE: mkcd DIRECTORY
+function mkcd {
+    mkdir -pv "$1" && cd "$1"
+}
+
+## Makes history backup
+function backup_history {
+    [[ ! -f "$HISTFILE" ]] && touch "$HISTFILE"
+    [[ ! -f "$HISTFILE-" ]] && touch "$HISTFILE-"
+    cp "$HISTFILE" "$HISTFILE-" 1>/dev/null 2>&1
+}
+
+## See `https://gist.github.com/lelandbatey/8677901'
+## USAGE: wb_clean INPUT OUTPUT
+function wb_clean {
+    convert "$1" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "$2"
+}
+
+## Notifies user when specified command finishes executing
+## USAGE: alert [COMMAND [ARGS...]]
+## NOTE: for icon names
+## see `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'
+function alert {
+    local summary="$@"
+    local start=$(date +%s)
+    eval '$@'
+    local retcode="$?"
+    tput bel
+    notify-send --urgency=normal --icon=utilities-terminal --expire-time=0 "Finished \"$summary\"." "Time elapsed: $(($(date +%s) - start)) seconds.\nReturn code: $retcode."
+}
+
+## Quick timer
+## USAGE: timer [NUMBER[SUFFIX]]
+## SUFFIX may be `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
+## If no argument is given, the default timespan will be 5 minutes.
+function timer {
+    local __duration__=${1:-5m}
+    sleep $__duration__
+    tput bel
+    notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "Timer for $__duration__ expired."
+}
+
+## Reads a file using `dd' and compresses it w/ `gzip'
+## USAGE: ddgz FILE FILE.gz
+function ddgz {
+    [[ -n "$1" ]] && [[ -n "$2" ]] && dd if="$1" conv=sync,noerror,notrunc,excl bs=8192K | gzip -c > "$2" || return 1
+}
+
+## Prints prompt for `virtualenv'
+## USAGE: __venv_ps1 FORMAT_STRING
+function __venv_ps1 {
+    [[ -n "$VIRTUAL_ENV" ]] && printf "$1" "$(basename $VIRTUAL_ENV)"
+}
+
+## Welcome message pt. I
+function welcome_msg {
+#    fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
+#    echo -en '\n'
+    command fortune -a | fmt -75 -s | cowsay -n -f tux
+#    echo -en '\n'
+}
+
 ## Takes a note
 function note {
     # if file doesn't exist, create it
@@ -63,7 +165,7 @@ function extract {
     return "$e"
 }
 
-## Compiles source file w/ GCC
+## Compiles source file w/ `GCC'
 ## USAGE: ccc FILE
 function ccc {
     [[ $1 ]]    || { echo "Missing operand" >&2; return 1; }
@@ -73,107 +175,6 @@ function ccc {
     rm "$output_path";
 
     return 0;
-}
-
-## Checks if particular command exists in the system
-## USAGE: cmd_exists COMMAND
-function cmd_exists {
-    command -pv "$1" >/dev/null 2>&1
-}
-
-## Prints horizontal separator line
-## USAGE: hr ['CHAR']
-function hr {
-    ## = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
-    yes "${1:-━}" | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
-}
-
-## Print a horizontal rule
-function hr2 {
-    printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion
-    # printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode properly
-}
-
-## Makes manpages colored
-function man {
-    env LESS_TERMCAP_mb=$'\E[01;31m' \
-    LESS_TERMCAP_md=$'\E[01;38;5;74m' \
-    LESS_TERMCAP_me=$'\E[0m' \
-    LESS_TERMCAP_se=$'\E[0m' \
-    LESS_TERMCAP_so=$'\E[38;5;246m' \
-    LESS_TERMCAP_ue=$'\E[0m' \
-    LESS_TERMCAP_us=$'\E[04;38;5;146m' \
-    man "$@"
-}
-
-## Search manpage given in argument `$1' for term given in argument `$2' (case insensitive)
-## displays paginated result with colored search terms and two lines surrounding each hit
-## USAGE: manf PAGE TERM
-function manf {
-    man "$1" | grep -iC3 "$2" | less
-}
-
-## Makes a new dir and cds into it
-## USAGE: mkcd DIRECTORY
-function mkcd {
-    mkdir -pv "$1" && cd "$1"
-}
-
-## Makes history backup
-function backup_history {
-    [[ ! -f "$HISTFILE" ]] && touch "$HISTFILE"
-    [[ ! -f "$HISTFILE2" ]] && touch "$HISTFILE-"
-    cp "$HISTFILE" "$HISTFILE-" 1>/dev/null 2>&1
-}
-
-## See `https://gist.github.com/lelandbatey/8677901'
-## USAGE: wb_clean INPUT OUTPUT
-function wb_clean {
-    convert "$1" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "$2"
-}
-
-## Notifies user when specified command finishes executing
-## USAGE: alert [COMMAND [ARGS...]]
-## NOTE: for icon names
-## see `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'
-function alert {
-    local summary="$@"
-    local start=$(date +%s)
-    eval '$@'
-    local retcode="$?"
-    tput bel
-    notify-send --urgency=normal --icon=utilities-terminal --expire-time=0 "Finished \"$summary\"." "Time elapsed: $(($(date +%s) - start)) seconds.\nReturn code: $retcode."
-}
-
-## Quick timer
-## USAGE: timer [NUMBER[SUFFIX]]
-## SUFFIX may be `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
-## If no argument is given, the default timespan will be 5 minutes.
-function timer {
-    local __duration__=${1:-5m}
-    sleep $__duration__
-    tput bel
-    notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "Timer for $__duration__ expired."
-}
-
-## Reads a file using `dd' and compresses it w/ `gzip'
-## USAGE: ddgz FILE FILE.gz
-function ddgz {
-    [[ -n "$1" ]] && [[ -n "$2" ]] && dd if="$1" conv=sync,noerror,notrunc,excl bs=8192K | gzip -c > "$2" || return 1
-}
-
-## Prints prompt for `virtualenv'
-## USAGE: __venv_ps1 FORMAT_STRING
-function __venv_ps1 {
-    [[ -n "$VIRTUAL_ENV" ]] && printf "$1" "$(basename $VIRTUAL_ENV)"
-}
-
-## Welcome message pt. I
-function welcome_msg {
-#    fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
-#    echo -en '\n'
-    command fortune -a | fmt -75 -s | cowsay -n -f tux
-#    echo -en '\n'
 }
 
 # EOF

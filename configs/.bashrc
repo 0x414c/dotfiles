@@ -6,7 +6,7 @@
 
 
 # If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+[[ $- != *i* ]] && return 0
 
 ## Tries to `source' all the files whose
 ## names provided as function arguments
@@ -26,7 +26,7 @@ function __source__ {
                 source "$file"
                 retcode=$?
             else
-                echo '__include__: not readable: '$file
+                echo '__source__: file is not readable: '$file
                 retcode=2
             fi
         done
@@ -82,7 +82,7 @@ function __init_env_vars__ {
     # export LS_COLORS="ExGxBxDxCxEgEdxbxgxcxd" # Linux default?
     export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:' # Default
 
-    ## Colorize GCC output
+    ## Colorize `GCC' output
     ## NOTE: See `http://gcc.gnu.org/onlinedocs/gcc-4.9.0/gcc/Language-Independent-Options.html#index-fdiagnostics-color-252'
     export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
@@ -96,7 +96,7 @@ function __init_env_vars__ {
     export GREP_COLORS='ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36'
 
     ## Options (for `less', ofc) are also taken from the environment variable `LESS'
-    export LESS='CR'
+    export LESS='-CR'
 
     ## Contains command to run the program used to list the contents of files
     ## The pager called by man and other such programs when you tell them to view a file
@@ -397,7 +397,7 @@ function __init_prompts__ {
     local __ps4s__=':'
 
     ## If set, the value is interpreted as a command to execute before the printing of each primary prompt
-    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND; } history -a; echo -en '\a\n'; echo -en '\e[37m'; hr; echo -en '\e[0m'; echo -en '\n\n'"
+    PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;} history -a; echo -en '\a\n\e[37m'; hr; echo -en '\e[0m\n\n'"
 
     ## PSs
     ## TODO: powerline-style arrows
@@ -448,13 +448,15 @@ function __init_prompts__ {
 
 
 # *****************************************************************************
-__use_system_bashrc__ && unset -f __use_system_bashrc__
-__use_user_helpers__ && unset -f __use_user_helpers__ && backup_history # && welcome_msg
-__use_system_helpers__ && unset -f __use_system_helpers__
 __init_env_vars__ && unset -f __init_env_vars__
+__use_system_bashrc__ && unset -f __use_system_bashrc__
+__use_system_helpers__ && unset -f __use_system_helpers__
+__use_user_helpers__ && unset -f __use_user_helpers__
 __init_shell_opts__ && unset -f __init_shell_opts__
 __init_aliases__ && unset -f __init_aliases__
 __init_prompts__ && unset -f __init_prompts__
+
+backup_history # && welcome_msg
 # *****************************************************************************
 
 ## EOF
