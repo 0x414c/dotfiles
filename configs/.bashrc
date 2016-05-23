@@ -330,71 +330,80 @@ function __init_prompts__ {
     ## `https://en.wikipedia.org/wiki/ANSI_escape_code'
 
     ## String w/ escape char for `PS3' and `PS4' (where escape sequences aren't fully supported)
-    local __escap__=$'\e'
+    local __escape__=$'\e'
 
     ## Text attributes
-    local __anorm__='\[\e[0m\]' ## Reset / Normal
-    local __abold__='\[\e[1m\]' ## Bold / Increased intensity
-    local __afain__='\[\e[2m\]' ## Faint / Decreased intensity
-    local __aital__='\[\e[3m\]' ## Italic: On
-    local __aunde__='\[\e[4m\]' ## Underline: Single
-    local __ablin__='\[\e[5m\]' ## Blink: Slow
-    local __anega__='\[\e[7m\]' ## Image: Negative
-    local __aconc__='\[\e[8m\]' ## Conceal
-    local __acros__='\[\e[9m\]' ## Crossed-out
+    local __att_normal__='\[\e[0m\]' ## Reset / Normal
+    local __att_bold__='\[\e[1m\]' ## Bold / Increased intensity
+    local __att_faint__='\[\e[2m\]' ## Faint / Decreased intensity
+    local __att_italic__='\[\e[3m\]' ## Italic: On
+    local __att_underline__='\[\e[4m\]' ## Underline: Single
+    local __att_blink__='\[\e[5m\]' ## Blink: Slow
+    local __att_negative__='\[\e[7m\]' ## Image: Negative
+    local __att_conceal__='\[\e[8m\]' ## Conceal
+    local __att_crossed_out__='\[\e[9m\]' ## Crossed-out
+
+    local __att_bold_off__='\[\e[21m\]' ## Bold: off
+    local __att_faint_off__='\[\e[22m\]' ##  Normal color or intensity
+    local __att_italic_off__='\[\e[23m\]' ## Not italic
+    local __att_underline_off__='\[\e[24m\]' ## Underline: None
+    local __att_blink_off__='\[\e[25m\]' ## Blink: off
+    local __att_negative_off__='\[\e[27m\]' ## Image: Positive
+    local __att_conceal_off__='\[\e[28m\]' ## Reveal
+    local __att_crossed_out_off__='\[\e[29m\]' ## Not crossed out
 
     ## Foreground (text) colors
-    local __fgbla__='\[\e[30m\]' ## Black
-    local __fgred__='\[\e[31m\]' ## Red
-    local __fggre__='\[\e[32m\]' ## Green
-    local __fgyel__='\[\e[33m\]' ## Yellow
-    local __fgblu__='\[\e[34m\]' ## Blue
-    local __fgmag__='\[\e[35m\]' ## Magenta
-    local __fgcya__='\[\e[36m\]' ## Cyan
-    local __fgwhi__='\[\e[37m\]' ## White
-    local __fgdef__='\[\e[39m\]' ## Default (Implementation defined)
+    local __fg_black__='\[\e[30m\]' ## Black
+    local __fg_red__='\[\e[31m\]' ## Red
+    local __fg_green__='\[\e[32m\]' ## Green
+    local __fg_yellow__='\[\e[33m\]' ## Yellow
+    local __fg_blue__='\[\e[34m\]' ## Blue
+    local __fg_magenta__='\[\e[35m\]' ## Magenta
+    local __fg_cyan__='\[\e[36m\]' ## Cyan
+    local __fg_white__='\[\e[37m\]' ## White
+    local __fg_default__='\[\e[39m\]' ## Default (Implementation defined)
 
     ## Background colors
-    local __bgbla__='\[\e[40m\]' ## Black
-    local __bgred__='\[\e[41m\]' ## Red
-    local __bggre__='\[\e[42m\]' ## Green
-    local __bgyel__='\[\e[43m\]' ## Yellow
-    local __bgblu__='\[\e[44m\]' ## Blue
-    local __bgmag__='\[\e[45m\]' ## Magenta
-    local __bgcya__='\[\e[46m\]' ## Cyan
-    local __bgwhi__='\[\e[47m\]' ## White
-    local __bgdef__='\[\e[49m\]' ## Default (Implementation defined)
+    local __bg_black__='\[\e[40m\]' ## Black
+    local __bg_red__='\[\e[41m\]' ## Red
+    local __bg_green__='\[\e[42m\]' ## Green
+    local __bg_yellow__='\[\e[43m\]' ## Yellow
+    local __bg_blue__='\[\e[44m\]' ## Blue
+    local __bg_magenta__='\[\e[45m\]' ## Magenta
+    local __bg_cyan__='\[\e[46m\]' ## Cyan
+    local __bg_white__='\[\e[47m\]' ## White
+    local __bg_default__='\[\e[49m\]' ## Default (Implementation defined)
 
     ## Foreground (text) high intensity colors
-    local __fhbla__='\[\e[90m\]' ## Black
-    local __fhred__='\[\e[91m\]' ## Red
-    local __fhgre__='\[\e[92m\]' ## Green
-    local __fhyel__='\[\e[93m\]' ## Yellow
-    local __fhblu__='\[\e[94m\]' ## Blue
-    local __fhmag__='\[\e[95m\]' ## Magenta
-    local __fhcya__='\[\e[96m\]' ## Cyan
-    local __fhwhi__='\[\e[97m\]' ## White
+    local __fg_hi_black__='\[\e[90m\]' ## Black
+    local __fg_hi_red__='\[\e[91m\]' ## Red
+    local __fg_hi_green__='\[\e[92m\]' ## Green
+    local __fg_hi_yellow__='\[\e[93m\]' ## Yellow
+    local __fg_hi_blue__='\[\e[94m\]' ## Blue
+    local __fg_hi_magenta__='\[\e[95m\]' ## Magenta
+    local __fg_hi_cyan__='\[\e[96m\]' ## Cyan
+    local __fg_hi_white__='\[\e[97m\]' ## White
 
     ## Background high intensity colors
-    local __bhbla__='\[\e[100m\]' ## Black
-    local __bhred__='\[\e[101m\]' ## Red
-    local __bhgre__='\[\e[102m\]' ## Green
-    local __bhyel__='\[\e[103m\]' ## Yellow
-    local __bhblu__='\[\e[104m\]' ## Blue
-    local __bhmag__='\[\e[105m\]' ## Magenta
-    local __bhcya__='\[\e[106m\]' ## Cyan
-    local __bhwhi__='\[\e[107m\]' ## White
+    local __bg_hi_black__='\[\e[100m\]' ## Black
+    local __bg_hi_red__='\[\e[101m\]' ## Red
+    local __bg_hi_green__='\[\e[102m\]' ## Green
+    local __bg_hi_yellow__='\[\e[103m\]' ## Yellow
+    local __bg_hi_blue__='\[\e[104m\]' ## Blue
+    local __bg_hi_magenta__='\[\e[105m\]' ## Magenta
+    local __bg_hi_cyan__='\[\e[106m\]' ## Cyan
+    local __bg_hi_white__='\[\e[107m\]' ## White
 
     ## ...and chars
     ## ╳ │ ┃ ┆ ┇ ┊ ┋ ▓ ▒ ░ ▞ ▚ ┏ ┗ ┃ ╚ ═ ╔ ═ 🢂 🡆 🞉 🞮 🞓 🞧 🞿 🞺 🠶 🢜 🢝 🢞 🢟 ⬤ ⬛ ⭙ 🙾 🙿 ❚ ❱ 🙼 🙽 🢂 ❯ ✓ ✔ ✗ ✘ ☑ ☒ ☐ ⮀  ➦ ✚ ● ± ☿ ⚙     🔀 ⋯ 🐍 ⓔ ▌ │ ▐ │ ⎇ ● ○
 
-    local __prbe__='░▒▓' ## prompt beginning char
-    local __pren__='▓▒░' ## prompt ending char
-    local __sest__='▒' ## section beginning marker
-    local __seen__='▒' ## section ending marker
-    local __ps2s__='>'
-    local __ps3s__='?'
-    local __ps4s__=':'
+    local __prompt_begin__='░▒▓' ## prompt beginning marker
+    local __prompt_end__='▓▒░' ## prompt ending marker
+    local __section_start__='▒' ## section beginning marker
+    local __section_end__='▒' ## section ending marker
+    local __ps2__='>' ## for `PS2'
+    local __ps3__='?' ## for `PS3'
+    local __ps4__=':' ## for `PS4'
 
     ## If set, the value is interpreted as a command to execute before the printing of each primary prompt
     PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;} history -a; echo -en '\a\n\e[37m'; hr; echo -en '\e[0m\n\n'"
@@ -434,15 +443,15 @@ function __init_prompts__ {
     local __name__=':\w'
     local __stat__='$([[ $? == 0 ]] && echo -n '✔' || echo -n '✘')'
     local __jobs__='\!:\#:\j:'$__stat__
-    local __git__="\$(__git_ps1 ' $__sest__ git:%s')"
-    local __venv__="\$(__venv_ps1 ' $__sest__ venv:%s')"
+    local __git__="\$(__git_ps1 ' $__section_start__ git:%s')"
+    local __venv__="\$(__venv_ps1 ' $__section_start__ venv:%s')"
     local __path__='\W'$__git__$__venv__
     local __mark__='\$'
 
-    PS1="$__anorm__  $__fgcya__$__prbe__$__anorm__$__fgbla__$__bgcya__  $__date__  $__fgcya__$__bgbla__$__seen__$__fgbla__$__bgred__$__sest__  $__user__  $__fgred__$__bgbla__$__seen__$__fgbla__$__bggre__$__sest__  $__host__  $__fggre__$__bgbla__$__seen__$__fgbla__$__bgmag__$__sest__$__fgwhi__  $__name__  $__anorm__$__fgmag__$__pren__$__anorm__\n $__fgwhi__$__prbe__$__anorm__$__fgbla__$__bgwhi__  $__jobs__  $__fgwhi__$__bgbla__$__seen__$__fgbla__$__bgyel__$__sest__  $__path__  $__fgyel__$__bgbla__$__seen__$__fgbla__$__bgblu__$__sest__$__fgwhi__  $__mark__  $__anorm__$__fgblu__$__pren__$__anorm__ "
-    PS2=" $__anorm__$__fgbla__$__bgred__ $__ps2s__ $__anorm__ "
-    PS3=" $__escap__[0m$__escap__[30m$__escap__[42m $__ps3s__ $__escap__[0m "
-    PS4=" $__escap__[0m$__escap__[30m$__escap__[44m $__ps4s__ $__escap__[0m "
+    PS1="$__att_normal__  $__fg_cyan__$__prompt_begin__$__att_normal__$__fg_black__$__bg_cyan__  $__att_italic__$__date__  $__fg_cyan__$__bg_black__$__section_end__$__fg_black__$__bg_red__$__section_start__  $__user__  $__fg_red__$__bg_black__$__section_end__$__fg_black__$__bg_green__$__section_start__  $__host__  $__fg_green__$__bg_black__$__section_end__$__fg_black__$__bg_magenta__$__section_start__$__fg_white__  $__name__  $__att_normal__$__fg_magenta__$__prompt_end__$__att_normal__\n $__fg_white__$__prompt_begin__$__att_normal__$__fg_black__$__bg_white__  $__att_italic__$__jobs__  $__fg_white__$__bg_black__$__section_end__$__fg_black__$__bg_yellow__$__section_start__  $__path__  $__fg_yellow__$__bg_black__$__section_end__$__fg_black__$__bg_blue__$__section_start__$__fg_white__  $__mark__  $__att_normal__$__fg_blue__$__prompt_end__$__att_normal__ "
+    PS2=" $__att_normal__$__fg_black__$__bg_red__ $__ps2__ $__att_normal__ "
+    PS3=" $__escape__[0m$__escape__[30m$__escape__[42m $__ps3__ $__escape__[0m "
+    PS4=" $__escape__[0m$__escape__[30m$__escape__[44m $__ps4__ $__escape__[0m "
 }
 # *****************************************************************************
 
