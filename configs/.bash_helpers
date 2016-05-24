@@ -8,14 +8,14 @@
 ## Checks if particular command exists in the system
 ## USAGE: cmd_exists COMMAND
 function cmd_exists {
-    command -pv "$1" >/dev/null 2>&1
+    command -pv "$1" 1>/dev/null 2>&1
 }
 
 ## Prints horizontal separator line
 ## USAGE: hr ['CHAR']
 function hr {
     ## = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
-    yes "${1:-━}" | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
+    yes "${1:-━}" 2>/dev/null | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
 }
 
 ## Print a horizontal rule

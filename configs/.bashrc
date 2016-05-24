@@ -443,8 +443,8 @@ function __init_prompts__ {
     local __name__=':\w'
     local __stat__='$([[ $? == 0 ]] && echo -n '✔' || echo -n '✘')'
     local __jobs__='\!:\#:\j:'$__stat__
-    local __git__="\$(__git_ps1 ' $__section_start__ git:%s')"
-    local __venv__="\$(__venv_ps1 ' $__section_start__ venv:%s')"
+    local __git__="\$(__git_ps1 '  $__section_start__  git:%s')"
+    local __venv__="\$(__venv_ps1 '  $__section_start__  venv:%s')"
     local __path__='\W'$__git__$__venv__
     local __mark__='\$'
 
