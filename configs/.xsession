@@ -1,10 +1,13 @@
 #!/bin/sh
 
-#
-# ~/.xsession
-#
-# Executed by xdm/gdm/kdm at login
-#
+##
+## ~/.xsession
+##
 
-/bin/bash --login -i ~/.xinitrc
 
+## Executed by xdm/gdm/kdm at login
+
+
+/bin/bash --login -i '~/.xinitrc'
+
+## EOF

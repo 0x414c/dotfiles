@@ -1,6 +1,7 @@
-#
-# ~/.inputrc
-#
+##
+## ~/.inputrc
+##
+
 
 ## NOTE: See `https://www.gnu.org/software/bash/manual/html_node/Readline-Init-File-Syntax.html'
 ## See also `http://www.gnu.org/software/bash/manual/html_node/Commands-For-Completion.html'
@@ -9,7 +10,7 @@
 $include /etc/inputrc
 
 ## Adjust options
-## NOTE: `bind -v' to show options
+## NOTE: Use `bind -v' to show options
 set bell-style audible
 set bind-tty-special-chars on
 set blink-matching-paren on
@@ -52,27 +53,28 @@ set skip-completed-text on
 set visible-stats on
 
 ## Set hotkeys
-## NOTE: `bind -v' to show options
-## NOTE: To get keycodes use `read' or `^V' (switches term to verbatim mode)
+## NOTE: Use `bind -v' to show options
+## NOTE: To get keycodes use `read' or `^V' (this switches term to verbatim mode)
 ## NOTE: See `https://code.google.com/p/iterm2/wiki/Keybindings'
-## NOTE: Arrow keycodes is: Up | Right | Down | Left == ^[[1;5A | ^[[1;5C | ^[[1;5B | ^[[1;5D
-"\e[1;5A": history-search-backward # Control-Up -> search for completions to the current line from history
-"\e[1;5B": history-search-forward # Control-Down
-"\e[1;5D": backward-word # Control-Left -> jump one word left
-"\e[1;5C": forward-word # Control-Right
-"\e[1;6D": previous-history # Control-Shift-Left
-"\e[1;6C": next-history # Control-Shift-Right
-"\t": menu-complete # Tab -> CMD.exe-like rotating completion (but w/ BASH-like completions list)
-"\e[Z": menu-complete-backward # Shift-Tab -> 
-# "\e[3~": backward-kill-word # Meta-Del -> 
-# "\e[3;2~": backward-kill-word # Shift-Del -> 
+## NOTE: Arrow keycodes: Up | Right | Down | Left == ^[[1;5A | ^[[1;5C | ^[[1;5B | ^[[1;5D
+"\e[1;5A": history-search-backward  ## Control-Up -> search for completions to the current line from history
+"\e[1;5B": history-search-forward   ## Control-Down ->
+"\e[1;5D": backward-word            ## Control-Left -> jump one word left
+"\e[1;5C": forward-word             ## Control-Right -> jump one word right
+"\e[1;6D": previous-history         ## Control-Shift-Left ->
+"\e[1;6C": next-history             ## Control-Shift-Right ->
+"\t": menu-complete                 ## Tab -> CMD.exe-like rotating completion (but w/ BASH-like completions list)
+"\e[Z": menu-complete-backward      ## Shift-Tab ->
+# "\e[3~": backward-kill-word       ## Meta-Del ->
+# "\e[3;2~": backward-kill-word     ## Shift-Del ->
 
 ## Set some macros
 ## Following will automatically insert closing braces
+## NOTE: These macros can break pasting code from clipboard
 "\C-v": quoted-insert
 "\C-b": backward-char
 # "(": "\C-v()\C-b"
 # "[": "\C-v[]\C-b"
 # "{": "\C-v{}\C-b"
 # "\"": "\C-v\"\C-v\"\C-b"
-# "\047": "\C-v\047\C-v\047\C-b" # for single quote
+# "\047": "\C-v\047\C-v\047\C-b"  ## For single quote

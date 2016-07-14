@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-#
-# ~/.bash_logout
-#
+##
+## ~/.bash_logout
+##
 
 
-## `tput' is a part of `ncurses'
-tput clear
-tput reset
+## When leaving the console clear the screen to increase privacy
+## NOTE: `tput' is a part of `ncurses'
+if [[ "${SHLVL}" == 1 ]]; then
+    [[ "$(command -v 'tput')" != 0 ]] && { command tput clear; command tput reset; }
+fi
+
+## EOF

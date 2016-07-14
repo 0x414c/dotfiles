@@ -1,180 +1,209 @@
 #!/usr/bin/env bash
 
-#
-# ~/.bash_helpers
-#
+##
+## ~/.bash_helpers
+##
 
 
-## Checks if particular command exists in the system
+## NOTE: `command' is used to make sure that we do not
+##   call an alias instead of system command
+
+
+## SUMMARY: Checks if particular command is present in the system
 ## USAGE: cmd_exists COMMAND
+## RETURN CODES:
+##   `0` if `COMMAND' was found,
+##   non-zero if `COMMAND' was not found
 function cmd_exists {
-    command -pv "$1" 1>/dev/null 2>&1
+    command -v "${1}" 1>'/dev/null' 2>&1
 }
 
-## Prints horizontal separator line
-## USAGE: hr ['CHAR']
+## SUMMARY: Checks if particular function was defined
+## USAGE: func_exists FUNCTION
+function func_exists {
+    [[ "$(type -t ${1})" == 'function' ]]
+}
+
+## SUMMARY: Prints horizontal line
+## USAGE: hr [CHAR]
 function hr {
-    ## = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
-    yes "${1:-━}" 2>/dev/null | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
+    ## NOTE: = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
+    command yes "${1:-━}" 2>'/dev/null' | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
 }
 
-## Print a horizontal rule
+## SUMMARY: Prints horizontal line
+## USAGE: hr2 [CHAR]
+## NOTE: Alternative version
 function hr2 {
-    printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion
-    # printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode properly
+    command printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion
+    # command printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode chars properly
 }
 
-## Makes manpages colored
-## TODO: Put these vars to `.lesskey' file
-function man {
-    env LESS_TERMCAP_mb=$'\e[01;31m' \
+## SUMMARY: Makes manpages colored
+## TODO: Put these vars to the `.lesskey' file
+function manc {
+    command env LESS_TERMCAP_mb=$'\e[01;31m' \
     LESS_TERMCAP_md=$'\e[01;38;5;74m' \
     LESS_TERMCAP_me=$'\e[0m' \
     LESS_TERMCAP_se=$'\e[0m' \
     LESS_TERMCAP_so=$'\e[38;5;246m' \
     LESS_TERMCAP_ue=$'\e[0m' \
     LESS_TERMCAP_us=$'\e[04;38;5;146m' \
-    man "$@"
+    man "${@}"
 }
 
-## Search manpage given in argument `$1' for term given in argument `$2' (case insensitive)
-## displays paginated result with colored search terms and seven lines surrounding each hit
+## SUMMARY: Searches manpage given in argument `${1}' for a term given in argument `${2}' (case insensitive);
+##   displays results with colored search terms and 7 lines surrounding each hit
 ## USAGE: manf PAGE TERM
 function manf {
-    man "$1" | grep -iC7 "$2" --color=always | less -CR
+    command man "${1}" | command grep -iC7 "${2}" --color='always' | command less -CR
 }
 
-## Makes a new directory and jumps into it
+## SUMMARY: Makes a new directory and immediately jumps into it
 ## USAGE: mkcd DIRECTORY
 function mkcd {
-    mkdir -pv "$1" && cd "$1"
+    command mkdir -pv "${1}" && command cd "${1}"
 }
 
-## Makes history backup
+## SUMMARY: Makes backup of Bash history file
+## USAGE: backup_history
 function backup_history {
-    [[ ! -f "$HISTFILE" ]] && touch "$HISTFILE"
-    [[ ! -f "$HISTFILE-" ]] && touch "$HISTFILE-"
-    cp "$HISTFILE" "$HISTFILE-" 1>/dev/null 2>&1
+    [[ ! -f "${HISTFILE}" ]] && command touch "${HISTFILE}"
+    [[ ! -f "${HISTFILE}-" ]] && command touch "${HISTFILE}-"
+
+    command cp --backup='simple' --suffix='-' -LpTu "${HISTFILE}" "${HISTFILE}-" 1>'/dev/null'
 }
 
-## See `https://gist.github.com/lelandbatey/8677901'
+## SUMMARY:
 ## USAGE: wb_clean INPUT OUTPUT
+## NOTE: See `https://gist.github.com/lelandbatey/8677901'
 function wb_clean {
-    convert "$1" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "$2"
+    command convert "${1}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${2}"
 }
 
 ## Notifies user when specified command finishes executing
 ## USAGE: alert [COMMAND [ARGS...]]
-## NOTE: for icon names
-## see `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'
+## NOTE: for icon names see:
+##   `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'
+## NOTE: `tput' is part of `ncurses'
 function alert {
-    local summary="$@"
-    local start=$(date +%s)
-    eval '$@'
-    local retcode="$?"
-    tput bel
-    notify-send --urgency=normal --icon=utilities-terminal --expire-time=0 "Finished \"$summary\"." "Time elapsed: $(($(date +%s) - start)) seconds.\nReturn code: $retcode."
+    local __summary__="${@}"
+    local __start_time__=$(date +%s)
+    command eval '${@}'
+    local __retcode__="${?}"
+    command tput bel
+    command notify-send --urgency='normal' --icon='utilities-terminal' --expire-time=0 "Finished command \"${__summary__}\"." "Time elapsed: $(($(date +%s) - __start_time__)) seconds.\nReturn code: ${__retcode__}."
 }
 
-## Quick timer
+## SUMMARY: Quick timer
 ## USAGE: timer [NUMBER[SUFFIX]]
-## SUFFIX may be `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
-## If no argument is given, the default timespan will be 5 minutes.
+##   where `SUFFIX' can be set to `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
+## NOTES: If no argument is given, the default timespan will be 5 minutes.
 function timer {
-    local __duration__=${1:-5m}
-    sleep $__duration__
-    tput bel
-    notify-send --urgency=normal --icon=appointment-soon --expire-time=0 "Timer for $__duration__ expired."
+    local __duration__="${1:-5m}"
+    command sleep "${__duration__}"
+    command tput bel
+    command notify-send --urgency='normal' --icon='appointment-soon' --expire-time=0 "Timer for ${__duration__} expired."
 }
 
-## Reads a file using `dd' and compresses it w/ `gzip'
+## SUMMARY: Reads a file using `dd' and compresses it w/ `gzip'
 ## USAGE: ddgz FILE FILE.gz
 function ddgz {
-    [[ -n "$1" ]] && [[ -n "$2" ]] && dd if="$1" conv=sync,noerror,notrunc,excl bs=8192K | gzip -c > "$2" || return 1
+    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || return 1
 }
 
-## Prints prompt for `virtualenv'
+## SUMMARY: Prints prompt for `virtualenv'
 ## USAGE: __venv_ps1 FORMAT_STRING
 function __venv_ps1 {
-    [[ -n "$VIRTUAL_ENV" ]] && printf "$1" "$(basename $VIRTUAL_ENV)"
+    [[ -n "${VIRTUAL_ENV}" ]] && command printf "${1}" "$(basename ${VIRTUAL_ENV})"
 }
 
-## Welcome message pt. I
+## SUMMARY: Prints welcome message
+## USAGE: welcome_msg
 function welcome_msg {
-#    fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
-#    echo -en '\n'
-    command fortune -a | fmt -75 -s | cowsay -n -f tux
-#    echo -en '\n'
+    # command fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
+    # command echo -en '\n'
+    command fortune -a | fmt -75 -s | cowsay -n -f 'tux'
+    # command echo -en '\n'
 }
 
-## Takes a note
+## SUMMARY: Takes a note
+## USAGE: note [TEXT]
 function note {
-    # if file doesn't exist, create it
-    if [[ ! -f $HOME/.notes ]]; then
-        touch "$HOME/.notes"
+    local __file__="${HOME}"'/.notes'
+
+    ## If file doesn't exist, create it
+    if [[ ! -f "${__file__}" ]]; then
+        command touch "${__file__}"
     fi
 
-    if ! (($#)); then
-        # no arguments, print file
-        cat "$HOME/.notes"
-    elif [[ "$1" == "-c" ]]; then
-        # clear file
-        >| "$HOME/.notes"
+    if ! ((${#})); then
+        ## No arguments, print file
+        ## TODO: Use `less'
+        command cat "${__file__}"
+    elif [[ "${1}" == '-c' ]]; then
+        ## Clear file
+        ## NOTE: >| can overwrite files in `noclobber' mode
+        >| "${__file__}"
     else
-        # add all arguments to file
-        printf "%s\n" "$*" >> "$HOME/.notes"
+        ## Add all arguments to file
+        command printf "%s\n" "$*" >> "${__file__}"
     fi
 
     return 0
 }
 
-## Extracts an archive
+## SUMMARY: Extracts an archive
+## USAGE: extract FILE
 function extract {
-    local c e i
+    local __cmd__ __retcode__ __file__
 
-    (($#)) || return
+    ((${#})) || return
 
-    for i; do
-        c=''
-        e=1
+    for __file__; do
+        __cmd__=''
+        __retcode__=1
 
-        if [[ ! -r $i ]]; then
-            echo "$0: file is unreadable: \`$i'" >&2
+        if [[ ! -r "${__file__}" ]]; then
+            echo "${0}: file \`${__file__}' is unreadable" 1>&2
+
             continue
         fi
 
-        case $i in
+        case "${__file__}" in
             *.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz)))))
-                   c=(bsdtar xvf);;
-            *.7z)  c=(7z x);;
-            *.Z)   c=(uncompress);;
-            *.bz2) c=(bunzip2);;
-            *.exe) c=(cabextract);;
-            *.gz)  c=(gunzip);;
-            *.rar) c=(unrar x);;
-            *.xz)  c=(unxz);;
-            *.zip) c=(unzip);;
-            *)     echo "$0: unrecognized file extension: \`$i'" >&2
+                   __cmd__=(bsdtar xvf);;
+            *.7z)  __cmd__=(7z x);;
+            *.Z)   __cmd__=(uncompress);;
+            *.bz2) __cmd__=(bunzip2);;
+            *.exe) __cmd__=(cabextract);;
+            *.gz)  __cmd__=(gunzip);;
+            *.rar) __cmd__=(unrar x);;
+            *.xz)  __cmd__=(unxz);;
+            *.zip) __cmd__=(unzip);;
+            *)     echo "${0}: file \`${__file__}' have unrecognized extension" 1>&2
                    continue;;
         esac
 
-        command "${c[@]}" "$i"
-        ((e = e || $?))
+        command "${__cmd__[@]}" "${__file__}"
+        ((__retcode__ = __retcode__ || ${?}))
     done
 
-    return "$e"
+    return "${__retcode__}"
 }
 
-## Compiles source file w/ `GCC'
+## SUMMARY: Compiles source file w/ `GCC'
 ## USAGE: ccc FILE
 function ccc {
-    [[ $1 ]]    || { echo "Missing operand" >&2; return 1; }
-    [[ -r $1 ]] || { printf "File %s does not exist or is not readable\n" "$1" >&2; return 1; }
-    local output_path=${TMPDIR:-/tmp}/${1##*/};
-    gcc "$1" -o "$output_path" && "$output_path";
-    rm "$output_path";
+    [[ "${1}" ]]    || { echo "${0}: missing operand" 1>&2; return 1; }
+    [[ -r "${1}" ]] || { echo "${0}: file \`${1}' does not exist or is not readable" 1>&2; return 1; }
+
+    local __output_path__="${TMPDIR:-/tmp}/${1##*/}";
+
+    command gcc "${1}" -o "${__output_path__}" && "${__output_path__}";
+    command rm "${__output_path__}";
 
     return 0;
 }
 
-# EOF
+## EOF
