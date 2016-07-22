@@ -276,7 +276,7 @@ function __init_aliases__ {
     alias mp='makepkg'
 
     ## Yet another shortcuts...
-    alias fcnt='echo $(ls -1 | wc -l)'
+    alias fcnt='echo "$(ls -1 | wc -l)"'
     alias fnd='find . -name'
     alias ups='ps -u "${USER}" -o pid,%cpu,%mem,start,time,bsdtime,command'
     alias pidof='lsof -t -c'
@@ -296,7 +296,7 @@ function __init_aliases__ {
     alias mkcpio='sudo mkinitcpio -p linux'
 
     alias bigtmp='sudo mount -o remount,size=4G,noatime /tmp'
-    alias rfrc='source ${HOME}/.bashrc'
+    alias rfrc='source "${HOME}"'/.bashrc''
 
     alias shu='sudo shutdown -h now'
     alias reb='sudo shutdown -r now'

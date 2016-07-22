@@ -112,6 +112,12 @@ function ddgz {
     [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || return 1
 }
 
+## SUMMARY: Creates extremely compressed .tar.xz archive
+## USAGE: tcexz ARCHIVE.tar.xz FILE [FILE...]
+function tcexz {
+    [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${0}: missing operands" 1>&2; return 1; }
+}
+
 ## SUMMARY: Prints prompt for `virtualenv'
 ## USAGE: __venv_ps1 FORMAT_STRING
 function __venv_ps1 {
