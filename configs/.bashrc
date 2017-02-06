@@ -210,6 +210,7 @@ function __init_shell_opts__ {
 ## *****************************************************************************
 
 
+## TODO: Clean up this mess! And move the rest of it to separate `.bash_aliases' file.
 ## ***************************** Add some handy aliases ************************
 function __init_aliases__ {
     ## Make it shine...
@@ -277,11 +278,12 @@ function __init_aliases__ {
 
     ## Yet another shortcuts...
     alias fcnt='echo "$(ls -1 | wc -l)"'
-    alias fnd='find . -name'
+    alias nfind='find . -name'
     alias ups='ps -u "${USER}" -o pid,%cpu,%mem,start,time,bsdtime,command'
     alias pidof='lsof -t -c'
     alias ducsh='du -csh * | sort -rh'
     alias whence='type -a'
+	alias vtree='tree -a --timefmt '%FT%T%z' -Q -h -D -F --dirsfirst'
 
     alias pgsh='sudo su - postgres'
     alias djtst='python2 ./manage.py runserver'
