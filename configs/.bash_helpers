@@ -56,13 +56,13 @@ function manc {
 ##   displays results with colored search terms and 7 lines surrounding each hit
 ## USAGE: manf PAGE TERM
 function manf {
-    command man "${1}" | command grep -iC7 "${2}" --color='always' | command less -CR
+    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command man "${1}" | command grep -iC7 "${2}" --color='always' | command less -CR || { echo "${FUNCNAME[0]}: missing arguments: PAGE TERM" 1>&2; return 1; }
 }
 
 ## SUMMARY: Makes a new directory and immediately jumps into it
 ## USAGE: mkcd DIRECTORY
 function mkcd {
-    command mkdir -pv "${1}" && command cd "${1}"
+    [[ -n "${1}" ]] && command mkdir -pv "${1}" && command cd "${1}" || { echo "${FUNCNAME[0]}: missing argument: DIRECTORY" 1>&2; return 1; }
 }
 
 ## SUMMARY: Makes backup of Bash history file
@@ -78,7 +78,7 @@ function backup_history {
 ## USAGE: wb_clean INPUT OUTPUT
 ## NOTE: See `https://gist.github.com/lelandbatey/8677901'
 function wb_clean {
-    command convert "${1}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${2}"
+    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command convert "${1}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
 }
 
 ## Notifies user when specified command finishes executing
@@ -107,15 +107,15 @@ function timer {
 }
 
 ## SUMMARY: Reads a file using `dd' and compresses it w/ `gzip'
-## USAGE: ddgz FILE FILE.gz
+## USAGE: ddgz INPUT OUTPUT
 function ddgz {
-    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || return 1
+    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
 }
 
 ## SUMMARY: Creates extremely compressed .tar.xz archive
-## USAGE: tcexz ARCHIVE.tar.xz FILE [FILE...]
+## USAGE: tcexz OUTPUT FILE1 [FILEN...]
 function tcexz {
-    [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${0}: missing operands" 1>&2; return 1; }
+    [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${FUNCNAME[0]}: missing arguments: OUTPUT FILE1 [FILEN...]" 1>&2; return 1; }
 }
 
 ## SUMMARY: Prints prompt for `virtualenv'
@@ -134,22 +134,20 @@ function welcome_msg {
 }
 
 ## SUMMARY: Takes a note
-## USAGE: note [TEXT]
+## USAGE: note [WORD1 [WORDN...]]
 function note {
     local __file__="${HOME}"'/.notes'
 
     ## If file doesn't exist, create it
-    if [[ ! -f "${__file__}" ]]; then
-        command touch "${__file__}"
-    fi
+    [[ ! -f "${__file__}" ]] && command touch "${__file__}"
 
-    if ! ((${#})); then
+    if [[ "${#}" -eq 0 ]]; then
         ## No arguments, print file
-        ## TODO: Use `less'
+        ## TODO: Use `PAGER'
         command cat "${__file__}"
     elif [[ "${1}" == '-c' ]]; then
         ## Clear file
-        ## NOTE: >| can overwrite files in `noclobber' mode
+        ## NOTE: `>|' can overwrite files in `noclobber' mode
         >| "${__file__}"
     else
         ## Add all arguments to file
@@ -160,39 +158,39 @@ function note {
 }
 
 ## SUMMARY: Extracts an archive
-## USAGE: extract FILE
+## USAGE: extract FILE1 [FILEN...]
 function extract {
     local __cmd__ __retcode__ __file__
 
-    ((${#})) || return
+    [[ "${#}" -eq 0 ]] && { echo "${FUNCNAME[0]}: missing arguments: FILE1 [FILEN...]" 1>&2; return 1; }
 
-    for __file__; do
+    for __file__ in "${@}" do
         __cmd__=''
-        __retcode__=1
+        __retcode__=0
 
         if [[ ! -r "${__file__}" ]]; then
-            echo "${0}: file \`${__file__}' is unreadable" 1>&2
+            echo "${0}: file \`${__file__}' does not exist or is not readable" 1>&2
 
             continue
         fi
 
         case "${__file__}" in
-            *.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz)))))
-                   __cmd__=(bsdtar xvf);;
-            *.7z)  __cmd__=(7z x);;
-            *.Z)   __cmd__=(uncompress);;
-            *.bz2) __cmd__=(bunzip2);;
-            *.exe) __cmd__=(cabextract);;
-            *.gz)  __cmd__=(gunzip);;
-            *.rar) __cmd__=(unrar x);;
-            *.xz)  __cmd__=(unxz);;
-            *.zip) __cmd__=(unzip);;
-            *)     echo "${0}: file \`${__file__}' have unrecognized extension" 1>&2
-                   continue;;
+            *.t@(gz|lz|xz|b@(2|z?(2))|a@(z|r?(.@(Z|bz?(2)|gz|lzma|xz)))) )
+                    __cmd__=(bsdtar xvf) ;;
+            *.7z )  __cmd__=(7z x) ;;
+            *.Z )   __cmd__=(uncompress) ;;
+            *.bz2 ) __cmd__=(bunzip2) ;;
+            *.exe ) __cmd__=(cabextract) ;;
+            *.gz )  __cmd__=(gunzip) ;;
+            *.rar ) __cmd__=(unrar x) ;;
+            *.xz )  __cmd__=(unxz) ;;
+            *.zip ) __cmd__=(unzip) ;;
+            * )     echo "${0}: file \`${__file__}' have unrecognized extension" 1>&2
+                    continue ;;
         esac
 
         command "${__cmd__[@]}" "${__file__}"
-        ((__retcode__ = __retcode__ || ${?}))
+        [[ ! "${?}" -eq 0 ]] && __retcode__="${?}"
     done
 
     return "${__retcode__}"
@@ -201,15 +199,15 @@ function extract {
 ## SUMMARY: Compiles source file w/ `GCC'
 ## USAGE: ccc FILE
 function ccc {
-    [[ "${1}" ]]    || { echo "${0}: missing operand" 1>&2; return 1; }
-    [[ -r "${1}" ]] || { echo "${0}: file \`${1}' does not exist or is not readable" 1>&2; return 1; }
+    [[ "${1}" ]] || { echo "${FUNCNAME[0]}: missing argument: FILE" 1>&2; return 1; }
+    [[ -r "${1}" ]] || { echo "${FUNCNAME[0]}: file \`${1}' does not exist or is not readable" 1>&2; return 1; }
 
-    local __output_path__="${TMPDIR:-/tmp}/${1##*/}";
+    local __output_path__="${TMPDIR:-/tmp}/${1##*/}"
 
-    command gcc "${1}" -o "${__output_path__}" && "${__output_path__}";
-    command rm "${__output_path__}";
+    command gcc "${1}" -o "${__output_path__}" && "${__output_path__}"
+    command rm "${__output_path__}"
 
-    return 0;
+    return 0
 }
 
 ## EOF
