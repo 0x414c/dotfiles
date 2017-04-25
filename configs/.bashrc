@@ -12,27 +12,26 @@
 ## ***************************** Define useful functions ***********************
 ## Tries to `source' all the files whose
 ## names provided as function arguments
-## USAGE: __include__ [FILE1 [FILE2...]]
+## USAGE: __source__ [FILE1 [FILEN...]]
 ## TODO: Return number of sourced files
-## Return codes:
-## `2' if one or more files is not readable,
-## `1' if no args provided
-## `0' if all the provided files was successfully sourced
+## RETURN CODES:
+##   `2' if one or more files is not readable,
+##   `1' if no args provided,
+##   `0' if all the provided files was successfully sourced
 function __source__ {
-    [[ -z "${@}" ]] && return 1
+    [[ "${#}" -eq 0 ]] && return 1
 
     local __retcode__=0
 
-    for __file__ in "${@}"
-        do
-            if [[ -r "${__file__}" ]]; then
-                command source "${__file__}"
-                __retcode__="${?}"
-            else
-                command echo "${0}: file \`${__file__}' is not readable" 1>&2
-                __retcode__=2
-            fi
-        done
+    for __file__ in "${@}" do
+        if [[ -r "${__file__}" ]]; then
+            command source "${__file__}"
+            [[ ! "${__retcode__}" -eq 2 ]] && __retcode__="${?}"
+        else
+            command echo "${0}: file \`${__file__}' is not readable" 1>&2
+            __retcode__=2
+        fi
+    done
 
     return "${__retcode__}"
 }
