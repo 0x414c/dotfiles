@@ -8,12 +8,12 @@ function colors2 {
     printf "Values 40..47 are \e[43mbackground colors\e[m\n"
     printf "Value  1 gives a  \e[1mbold-faced look\e[m\n\n"
 
-    # foreground colors
+    ## foreground colors
     for fgc in {30..37}; do
-        # background colors
+        ## background colors
         for bgc in {40..47}; do
-            fgc=${fgc#37} # white
-            bgc=${bgc#40} # black
+            fgc=${fgc#37} ## white
+            bgc=${bgc#40} ## black
 
             vals="${fgc:+$fgc;}${bgc}"
             vals=${vals%%;}
@@ -29,7 +29,5 @@ function colors2 {
 }
 
 colors2
-
-exit 0
 
 ## EOF
