@@ -127,14 +127,14 @@ function __init_env_vars__ {
 
     ## Contains the command to run the lightweight program used for editing files
     ## The editor program called by `sudoedit', `vipw', and other such programs when you tell them to edit a file
-    if [[ -n "${DISPLAY}" ]]; then export EDITOR='gedit'; else export EDITOR='nano'; fi
+    [[ -n "${DISPLAY}" ]] && export EDITOR='gedit' || export EDITOR='nano'
 
     ## Contains command to run the full-fledged editor that is used for more demanding tasks
     ## Many programs, including `less' and `crontab', will invoke VISUAL to edit a file, falling back to `EDITOR' if `VISUAL' is not set - but others invoke `EDITOR' directly
-    if [[ -n "${DISPLAY}" ]]; then export VISUAL='subl3'; else export EDITOR='ne'; fi
+    [[ -n "${DISPLAY}" ]] && export VISUAL='subl3' || export EDITOR='ne'
 
     ## Contains the path to the web browser
-    if [[ -n "${DISPLAY}" ]]; then export BROWSER='firefox'; else export BROWSER='lynx'; fi
+    [[ -n "${DISPLAY}" ]] && export BROWSER='firefox' || export BROWSER='lynx'
 
     ## POSIX-compliant mode
     ## NOTE: This conflicts w/ `yaourt'
@@ -282,7 +282,7 @@ function __init_aliases__ {
     alias pidof='lsof -t -c'
     alias ducsh='du -csh * | sort -rh'
     alias whence='type -a'
-	alias vtree='tree -a --timefmt '%FT%T%z' -Q -h -D -F --dirsfirst'
+    alias vtree='tree -a --timefmt '%FT%T%z' -Q -h -D -F --dirsfirst'
 
     alias pgsh='sudo su - postgres'
     alias djtst='python2 ./manage.py runserver'
@@ -426,7 +426,7 @@ function __init_prompts__ {
     PROMPT_COMMAND="${PROMPT_COMMAND:+${PROMPT_COMMAND};} command history -a; command echo -en '\a\n\e[37m'; hr; command echo -en '\e[0m\n\n'"
 
     ## PSs
-    ## TODO: powerline-style arrows
+    ## TODO: Powerline-style arrows
     ## NOTE:
     ## Sequence  Description
     ## \a        The ASCII bell character (you can also type \007)

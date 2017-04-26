@@ -12,14 +12,17 @@
 ## SUMMARY: Checks if particular command is present in the system
 ## USAGE: cmd_exists COMMAND
 ## RETURN CODES:
-##   `0` if `COMMAND' was found,
-##   non-zero if `COMMAND' was not found
+##   `0' if `COMMAND' was found,
+##   non-zero otherwise
 function cmd_exists {
     command -v "${1}" 1>'/dev/null' 2>&1
 }
 
-## SUMMARY: Checks if particular function was defined
+## SUMMARY: Checks if particular function is defined
 ## USAGE: func_exists FUNCTION
+## RETURN CODES:
+##   `0' if `FUNCTION' is defined,
+##   `1' otherwise
 function func_exists {
     [[ "$(type -t ${1})" == 'function' ]]
 }
@@ -157,7 +160,7 @@ function note {
     return 0
 }
 
-## SUMMARY: Extracts an archive
+## SUMMARY: Extracts archive(s)
 ## USAGE: extract FILE1 [FILEN...]
 function extract {
     local __cmd__ __retcode__ __file__
@@ -196,7 +199,7 @@ function extract {
     return "${__retcode__}"
 }
 
-## SUMMARY: Compiles source file w/ `GCC'
+## SUMMARY: Compiles source file w/ `GCC' and executes it
 ## USAGE: ccc FILE
 function ccc {
     [[ "${1}" ]] || { echo "${FUNCNAME[0]}: missing argument: FILE" 1>&2; return 1; }
