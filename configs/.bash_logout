@@ -5,8 +5,8 @@
 ##
 
 
-## When leaving the console clear the screen to increase privacy
-## NOTE: `tput' is a part of `ncurses'
+## When leaving the console clear the screen to increase privacy:
+## NOTE: `tput' is part of `ncurses'.
 if [[ "${SHLVL}" == 1 ]]; then
     [[ "$(command -v 'tput')" != 0 ]] && { command tput clear; command tput reset; }
 fi

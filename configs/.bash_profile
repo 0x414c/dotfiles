@@ -5,11 +5,11 @@
 ##
 
 
-## Pick up all the stuff from user's config if it's present
-[[ -r "${HOME}"'/.bashrc' ]] && command source "${HOME}"'/.bashrc'
+## Pick up all the stuff from user's config if it's present:
+[[ -r "${HOME}/"'.bashrc' ]] && command source "${HOME}/"'.bashrc'
 
 
-## Set user-specific environment vars
+## Set user-specific environment variables:
 command export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on'
 command export GDK_USE_XFT=1
 command export QT_XFT=1

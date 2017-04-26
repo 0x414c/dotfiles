@@ -1,8 +1,8 @@
 [user]
-	name = 0x414c!
-	email = 0x414c@gmail.com
+    name = 0x414c!
+    email = 0x414c@gmail.com
 [color]
-	ui = auto
+    ui = auto
 [color "branch"]
     current = yellow reverse
     local = yellow
@@ -17,10 +17,10 @@
     changed = green
     untracked = cyan
 [url "https://"]
-	insteadOf = git://
+    insteadOf = git://
 [merge]
     conflictstyle = diff3
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
-	required = true
+    clean = git-lfs clean %f
+    smudge = git-lfs smudge %f
+    required = true

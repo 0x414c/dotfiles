@@ -5,9 +5,13 @@
 ##
 
 
-## Executed by xdm/gdm/kdm at login
+## This script is called from Display Manager at login
+## and evaluated by POSIX shell.
 
 
-/bin/bash --login -i '~/.xinitrc'
+## `.xinitrc' can be evaluated from here:
+# source "${HOME}/"'.xinitrc'
+# exec /bin/bash/ --login "${HOME}/"'.xinitrc'
+# /bin/bash --login -i "${HOME}/"'.xinitrc'
 
 ## EOF

@@ -5,70 +5,73 @@
 ##
 
 
-## NOTE: `command' is used to make sure that we do not
-##   call an alias instead of system command
+## NOTE: `command' is used below to make sure that we do not
+##   call an alias instead of system command.
 
 
-## SUMMARY: Checks if particular command is present in the system
+## SUMMARY: Checks if particular command is present in the system.
 ## USAGE: cmd_exists COMMAND
 ## RETURN CODES:
-##   `0' if `COMMAND' was found,
-##   non-zero otherwise
+##   `0' if `COMMAND' was found;
+##   non-zero otherwise.
 function cmd_exists {
     command -v "${1}" 1>'/dev/null' 2>&1
 }
 
-## SUMMARY: Checks if particular function is defined
+## SUMMARY: Checks if particular function is defined.
 ## USAGE: func_exists FUNCTION
 ## RETURN CODES:
-##   `0' if `FUNCTION' is defined,
-##   `1' otherwise
+##   `0' if `FUNCTION' is defined;
+##   `1' otherwise.
 function func_exists {
     [[ "$(type -t ${1})" == 'function' ]]
 }
 
-## SUMMARY: Prints horizontal line
+## SUMMARY: Prints horizontal line.
 ## USAGE: hr [CHAR]
+## NOTE: `tput' is part of `ncurses'.
 function hr {
     ## NOTE: = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
     command yes "${1:-━}" 2>'/dev/null' | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
 }
 
-## SUMMARY: Prints horizontal line
+## SUMMARY: Prints horizontal line.
 ## USAGE: hr2 [CHAR]
-## NOTE: Alternative version
+## NOTE: Alternative version.
+## NOTE: `tput' is part of `ncurses'.
 function hr2 {
-    command printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion
-    # command printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode chars properly
+    command printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion.
+    # command printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode chars properly.
 }
 
-## SUMMARY: Makes manpages colored
-## TODO: Put these vars to the `.lesskey' file
+## SUMMARY: Makes manpages colored.
+## TODO: Put these vars to the `.lesskey' file.
 function manc {
-    command env LESS_TERMCAP_mb=$'\e[01;31m' \
-    LESS_TERMCAP_md=$'\e[01;38;5;74m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[38;5;246m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[04;38;5;146m' \
-    man "${@}"
+    command env \
+        LESS_TERMCAP_mb=$'\e[01;31m' \
+        LESS_TERMCAP_md=$'\e[01;38;5;74m' \
+        LESS_TERMCAP_me=$'\e[0m' \
+        LESS_TERMCAP_se=$'\e[0m' \
+        LESS_TERMCAP_so=$'\e[38;5;246m' \
+        LESS_TERMCAP_ue=$'\e[0m' \
+        LESS_TERMCAP_us=$'\e[04;38;5;146m' \
+        man "${@}"
 }
 
-## SUMMARY: Searches manpage given in argument `${1}' for a term given in argument `${2}' (case insensitive);
-##   displays results with colored search terms and 7 lines surrounding each hit
+## SUMMARY: Searches particular term in specified manpage;
+##   displays results with highlighted search terms and 7 lines surrounding each hit.
 ## USAGE: manf PAGE TERM
 function manf {
     [[ -n "${1}" ]] && [[ -n "${2}" ]] && command man "${1}" | command grep -iC7 "${2}" --color='always' | command less -CR || { echo "${FUNCNAME[0]}: missing arguments: PAGE TERM" 1>&2; return 1; }
 }
 
-## SUMMARY: Makes a new directory and immediately jumps into it
+## SUMMARY: Makes a new directory and immediately jumps into it.
 ## USAGE: mkcd DIRECTORY
 function mkcd {
     [[ -n "${1}" ]] && command mkdir -pv "${1}" && command cd "${1}" || { echo "${FUNCNAME[0]}: missing argument: DIRECTORY" 1>&2; return 1; }
 }
 
-## SUMMARY: Makes backup of Bash history file
+## SUMMARY: Makes backup of Bash history file.
 ## USAGE: backup_history
 function backup_history {
     [[ ! -f "${HISTFILE}" ]] && command touch "${HISTFILE}"
@@ -77,57 +80,63 @@ function backup_history {
     command cp --backup='simple' --suffix='-' -LpTu "${HISTFILE}" "${HISTFILE}-" 1>'/dev/null'
 }
 
-## SUMMARY:
+## SUMMARY: See `https://gist.github.com/lelandbatey/8677901'.
 ## USAGE: wb_clean INPUT OUTPUT
-## NOTE: See `https://gist.github.com/lelandbatey/8677901'
+## TODO: Move to separate script.
 function wb_clean {
     [[ -n "${1}" ]] && [[ -n "${2}" ]] && command convert "${1}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
 }
 
-## Notifies user when specified command finishes executing
-## USAGE: alert [COMMAND [ARGS...]]
-## NOTE: for icon names see:
-##   `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'
-## NOTE: `tput' is part of `ncurses'
+## Notifies user when specified command finished execution.
+## USAGE: alert COMMAND [ARGS...]
+## NOTE: For icon names see:
+##   `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'.
+## NOTE: `tput' is part of `ncurses'.
 function alert {
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: COMMAND [ARGS...]" 1>&2; return 1; }
+
     local __summary__="${@}"
-    local __start_time__=$(date +%s)
+    local __start_time__="$(date +%s)"
     command eval '${@}'
     local __retcode__="${?}"
-    command tput bel
+    command tput 'bel'
     command notify-send --urgency='normal' --icon='utilities-terminal' --expire-time=0 "Finished command \"${__summary__}\"." "Time elapsed: $(($(date +%s) - __start_time__)) seconds.\nReturn code: ${__retcode__}."
 }
 
-## SUMMARY: Quick timer
+## SUMMARY: Quick timer.
 ## USAGE: timer [NUMBER[SUFFIX]]
-##   where `SUFFIX' can be set to `s' for seconds (the default), `m' for minutes, `h' for hours or `d' for days.
+##   where `SUFFIX' can be set to:
+##     `s' for seconds (the default);
+##     `m' for minutes;
+##     `h' for hours;
+##     `d' for days.
 ## NOTES: If no argument is given, the default timespan will be 5 minutes.
 function timer {
     local __duration__="${1:-5m}"
     command sleep "${__duration__}"
-    command tput bel
+    command tput 'bel'
     command notify-send --urgency='normal' --icon='appointment-soon' --expire-time=0 "Timer for ${__duration__} expired."
 }
 
-## SUMMARY: Reads a file using `dd' and compresses it w/ `gzip'
+## SUMMARY: Reads a file using `dd' and compresses it w/ `gzip'.
 ## USAGE: ddgz INPUT OUTPUT
 function ddgz {
     [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
 }
 
-## SUMMARY: Creates extremely compressed .tar.xz archive
-## USAGE: tcexz OUTPUT FILE1 [FILEN...]
+## SUMMARY: Creates extremely compressed .tar.xz archive.
+## USAGE: tcexz OUTPUT FILE [FILES...]
 function tcexz {
-    [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${FUNCNAME[0]}: missing arguments: OUTPUT FILE1 [FILEN...]" 1>&2; return 1; }
+    [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${FUNCNAME[0]}: missing arguments: OUTPUT FILE [FILES...]" 1>&2; return 1; }
 }
 
-## SUMMARY: Prints prompt for `virtualenv'
+## SUMMARY: Prints prompt for `virtualenv'.
 ## USAGE: __venv_ps1 FORMAT_STRING
 function __venv_ps1 {
     [[ -n "${VIRTUAL_ENV}" ]] && command printf "${1}" "$(basename ${VIRTUAL_ENV})"
 }
 
-## SUMMARY: Prints welcome message
+## SUMMARY: Prints welcome message.
 ## USAGE: welcome_msg
 function welcome_msg {
     # command fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
@@ -136,38 +145,38 @@ function welcome_msg {
     # command echo -en '\n'
 }
 
-## SUMMARY: Takes a note
-## USAGE: note [WORD1 [WORDN...]]
+## SUMMARY: Takes a note.
+## USAGE: note [WORD [WORDS...]]
 function note {
     local __file__="${HOME}"'/.notes'
 
-    ## If file doesn't exist, create it
+    ## If file doesn't exist, create it:
     [[ ! -f "${__file__}" ]] && command touch "${__file__}"
 
     if [[ "${#}" -eq 0 ]]; then
-        ## No arguments, print file
-        ## TODO: Use `PAGER'
+        ## No arguments, print file:
+        ## TODO: Use `PAGER'.
         command cat "${__file__}"
     elif [[ "${1}" == '-c' ]]; then
-        ## Clear file
-        ## NOTE: `>|' can overwrite files in `noclobber' mode
+        ## Clear file:
+        ## NOTE: `>|' can overwrite files in `noclobber' mode.
         >| "${__file__}"
     else
-        ## Add all arguments to file
+        ## Add all arguments to file:
         command printf "%s\n" "$*" >> "${__file__}"
     fi
 
     return 0
 }
 
-## SUMMARY: Extracts archive(s)
-## USAGE: extract FILE1 [FILEN...]
+## SUMMARY: Extracts archive(s).
+## USAGE: extract FILE [FILES...]
 function extract {
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: FILE [FILES...]" 1>&2; return 1; }
+
     local __cmd__ __retcode__ __file__
 
-    [[ "${#}" -eq 0 ]] && { echo "${FUNCNAME[0]}: missing arguments: FILE1 [FILEN...]" 1>&2; return 1; }
-
-    for __file__ in "${@}" do
+    for __file__ in "${@}"; do
         __cmd__=''
         __retcode__=0
 
@@ -199,7 +208,7 @@ function extract {
     return "${__retcode__}"
 }
 
-## SUMMARY: Compiles source file w/ `GCC' and executes it
+## SUMMARY: Compiles source file w/ `GCC' and executes produced binary.
 ## USAGE: ccc FILE
 function ccc {
     [[ "${1}" ]] || { echo "${FUNCNAME[0]}: missing argument: FILE" 1>&2; return 1; }

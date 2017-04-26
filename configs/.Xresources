@@ -2,8 +2,7 @@
 ! ~/.Xresources
 !
 
-! To reload, execute 
-! xrdb -merge $HOME/.Xresources
+! To reload, execute `xrdb -merge "${HOME}/"'.Xresources''.
 
 Xft.antialias:  true
 Xft.autohint:   false
@@ -15,3 +14,5 @@ Xft.lcdfilter:  lcddefault
 ! lcdnone lcddefault lcdlight lcdlegacy
 Xft.rgba:       none
 ! none rgb bgr vrgb vbgr
+
+! EOF
