@@ -24,3 +24,7 @@
     clean = git-lfs clean %f
     smudge = git-lfs smudge %f
     required = true
+[pull]
+	rebase = true
+[alias]
+	start = !git init && git commit --allow-empty -m \"Initial (empty) commit\"
