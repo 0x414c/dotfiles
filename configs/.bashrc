@@ -10,7 +10,7 @@
 
 
 ## ***************************** Define useful functions ***********************
-## Executes commands from one or more files.
+## Execute commands from one or more files.
 ## NOTE: Does not pass arguments as built-in `source' does.
 ## USAGE: __source__ FILE [FILES...]
 ## TODO: [?] Return number of successfully evaluated files.
@@ -54,7 +54,7 @@ function __use_user_helpers__ {
 ## *****************************************************************************
 
 
-## ***************************** Add some system functions *********************
+## ***************************** Add some system-wide functions ****************
 function __use_system_helpers__ {
     __source__ '/usr/share/bash-completion/bash_completion' \
                '/usr/share/doc/pkgfile/command-not-found.bash' \
@@ -74,7 +74,7 @@ function __use_system_helpers__ {
 ## *****************************************************************************
 
 
-## ***************************** Add various env vars **************************
+## ***************************** Add various environment vars ******************
 function __init_env_vars__ {
     ## Use ANSI color sequences to distinguish file types:
     export CLICOLOR=1

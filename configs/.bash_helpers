@@ -9,7 +9,7 @@
 ##   call an alias instead of system command.
 
 
-## SUMMARY: Checks if particular command is present in the system.
+## SUMMARY: Check if particular command is present in the system.
 ## USAGE: cmd_exists COMMAND
 ## RETURN CODES:
 ##   `0' if `COMMAND' was found;
@@ -18,7 +18,7 @@ function cmd_exists {
     command -v "${1}" 1>'/dev/null' 2>&1
 }
 
-## SUMMARY: Checks if particular function is defined.
+## SUMMARY: Check if particular function is defined.
 ## USAGE: func_exists FUNCTION
 ## RETURN CODES:
 ##   `0' if `FUNCTION' is defined;
@@ -27,7 +27,7 @@ function func_exists {
     [[ "$(type -t ${1})" == 'function' ]]
 }
 
-## SUMMARY: Prints horizontal line.
+## SUMMARY: Print horizontal line.
 ## USAGE: hr [CHAR]
 ## NOTE: `tput' is part of `ncurses'.
 function hr {
@@ -35,7 +35,7 @@ function hr {
     command yes "${1:-━}" 2>'/dev/null' | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
 }
 
-## SUMMARY: Prints horizontal line.
+## SUMMARY: Print horizontal line.
 ## USAGE: hr2 [CHAR]
 ## NOTE: Alternative version.
 ## NOTE: `tput' is part of `ncurses'.
@@ -44,7 +44,7 @@ function hr2 {
     # command printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode chars properly.
 }
 
-## SUMMARY: Makes manpages colored.
+## SUMMARY: Make manpages colored.
 ## TODO: Put these vars to the `.lesskey' file.
 function manc {
     command env \
@@ -58,20 +58,20 @@ function manc {
         man "${@}"
 }
 
-## SUMMARY: Searches particular term in specified manpage;
-##   displays results with highlighted search terms and 7 lines surrounding each hit.
+## SUMMARY: Search particular term in specified manpage;
+##   display results with highlighted search terms and 7 lines surrounding each hit.
 ## USAGE: manf PAGE TERM
 function manf {
     [[ -n "${1}" ]] && [[ -n "${2}" ]] && command man "${1}" | command grep -iC7 "${2}" --color='always' | command less -CR || { echo "${FUNCNAME[0]}: missing arguments: PAGE TERM" 1>&2; return 1; }
 }
 
-## SUMMARY: Makes a new directory and immediately jumps into it.
+## SUMMARY: Make a new directory and immediately cd into it.
 ## USAGE: mkcd DIRECTORY
 function mkcd {
     [[ -n "${1}" ]] && command mkdir -pv "${1}" && command cd "${1}" || { echo "${FUNCNAME[0]}: missing argument: DIRECTORY" 1>&2; return 1; }
 }
 
-## SUMMARY: Makes backup of Bash history file.
+## SUMMARY: Make backup of Bash history file.
 ## USAGE: backup_history
 function backup_history {
     [[ ! -f "${HISTFILE}" ]] && command touch "${HISTFILE}"
@@ -87,7 +87,7 @@ function wb_clean {
     [[ -n "${1}" ]] && [[ -n "${2}" ]] && command convert "${1}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
 }
 
-## Notifies user when specified command finished execution.
+## Notify user when specified command finished execution.
 ## USAGE: alert COMMAND [ARGS...]
 ## NOTE: For icon names see:
 ##   `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'.
@@ -118,25 +118,27 @@ function timer {
     command notify-send --urgency='normal' --icon='appointment-soon' --expire-time=0 "Timer for ${__duration__} expired."
 }
 
-## SUMMARY: Reads a file using `dd' and compresses it w/ `gzip'.
+## SUMMARY: Read a file using `dd' and compresses it w/ `gzip'.
 ## USAGE: ddgz INPUT OUTPUT
 function ddgz {
     [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
 }
 
-## SUMMARY: Creates extremely compressed .tar.xz archive.
+## SUMMARY: Create extremely compressed .tar.xz archive.
 ## USAGE: tcexz OUTPUT FILE [FILES...]
 function tcexz {
     [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${FUNCNAME[0]}: missing arguments: OUTPUT FILE [FILES...]" 1>&2; return 1; }
 }
 
-## SUMMARY: Prints prompt for `virtualenv'.
-## USAGE: __venv_ps1 FORMAT_STRING
+## SUMMARY: Print prompt for `virtualenv'.
+## USAGE: __venv_ps1 FORMAT
 function __venv_ps1 {
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: FORMAT" 1>&2; return 1; }
+
     [[ -n "${VIRTUAL_ENV}" ]] && command printf "${1}" "$(basename ${VIRTUAL_ENV})"
 }
 
-## SUMMARY: Prints welcome message.
+## SUMMARY: Print welcome message.
 ## USAGE: welcome_msg
 function welcome_msg {
     # command fortune -a | fmt -80 -s | $(shuf -n 1 -e cowsay cowthink) -$(shuf -n 1 -e b d g p s t w y) -f $(shuf -n 1 -e $(cowsay -l | tail -n +2)) -n
@@ -145,7 +147,7 @@ function welcome_msg {
     # command echo -en '\n'
 }
 
-## SUMMARY: Takes a note.
+## SUMMARY: Take a note.
 ## USAGE: note [WORD [WORDS...]]
 function note {
     local __file__="${HOME}"'/.notes'
@@ -169,7 +171,7 @@ function note {
     return 0
 }
 
-## SUMMARY: Extracts archive(s).
+## SUMMARY: Extract archive(s).
 ## USAGE: extract FILE [FILES...]
 function extract {
     [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: FILE [FILES...]" 1>&2; return 1; }
@@ -208,7 +210,7 @@ function extract {
     return "${__retcode__}"
 }
 
-## SUMMARY: Compiles source file w/ `GCC' and executes produced binary.
+## SUMMARY: Compile source file w/ `GCC' and execute produced binary.
 ## USAGE: ccc FILE
 function ccc {
     [[ "${1}" ]] || { echo "${FUNCNAME[0]}: missing argument: FILE" 1>&2; return 1; }
@@ -220,6 +222,46 @@ function ccc {
     command rm "${__output_path__}"
 
     return 0
+}
+
+## SUMMARY: Copy data w/ verification using `rsync'.
+## USAGE: rsarc COPY_LOG CHECK_LOG SRC [SRCS...] DEST
+function rsarc {
+    [[ "${#}" -lt 4 ]] && { echo "${FUNCNAME[0]}: missing arguments: COPY_LOG CHECK_LOG SRC [SRCS...] DEST" 1>&2; return 1; }
+
+    rsync \
+        --verbose \
+        --checksum \
+        --archive \
+        --recursive \
+        --hard-links \
+        --acls \
+        $(: --xattrs) \
+        --sparse \
+        $(: --dry-run) \
+        --stats \
+        --human-readable \
+        --progress \
+        --itemize-changes \
+        --log-file="${1}" \
+        "${@:3}"
+
+    rsync \
+        --verbose \
+        --checksum \
+        --archive \
+        --recursive \
+        --hard-links \
+        --acls \
+        $(: --xattrs) \
+        --sparse \
+        --dry-run \
+        --stats \
+        --human-readable \
+        --progress \
+        --itemize-changes \
+        --log-file="${2}" \
+        "${@:3}"
 }
 
 ## EOF
