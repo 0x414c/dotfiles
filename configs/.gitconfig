@@ -27,4 +27,7 @@
 [pull]
 	rebase = true
 [alias]
-	start = !git init && git commit --allow-empty -m \"Initial (empty) commit\"
+	start = !git init && git commit --message='Initial (empty) commit' --allow-empty
+	cleanup-local-repo = !git reflog expire --all --expire-unreachable='all' --stale-fix && git gc --aggressive --prune='all'
+	rebase-all = !git rebase --interactive --keep-empty --root
+	insert-empty-root-commit = !git checkout --orphan 'new-master' && git rm -rf '.' && git commit --message='Initial (empty) commit' --allow-empty && git rebase --onto 'new-master' --root 'master' && git branch -d 'new-master'
