@@ -6,30 +6,34 @@
 
 
 ## NOTE: `command' is used below to make sure that we do not
-##   call an alias instead of system command.
+##   call an alias instead of a system command.
 
 
 ## SUMMARY: Check if particular command is present in the system.
-## USAGE: cmd_exists COMMAND
+## USAGE: cmd_exists <COMMAND>
 ## RETURN CODES:
-##   `0' if `COMMAND' was found;
-##   non-zero otherwise.
+##   -- `0' if `COMMAND' was found;
+##   -- non-zero otherwise.
 function cmd_exists {
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing argument: <COMMAND>" 1>&2; return 1; }
+
     command -v "${1}" 1>'/dev/null' 2>&1
 }
 
 ## SUMMARY: Check if particular function is defined.
-## USAGE: func_exists FUNCTION
+## USAGE: func_exists <FUNCTION>
 ## RETURN CODES:
-##   `0' if `FUNCTION' is defined;
-##   `1' otherwise.
+##   -- `0' if `FUNCTION' is defined;
+##   -- `1' otherwise.
 function func_exists {
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing argument: <FUNCTION>" 1>&2; return 1; }
+
     [[ "$(type -t ${1})" == 'function' ]]
 }
 
 ## SUMMARY: Print horizontal line.
 ## USAGE: hr [CHAR]
-## NOTE: `tput' is part of `ncurses'.
+## NOTE: `tput' is a part of `ncurses'.
 function hr {
     ## NOTE: = - * ═ ▬ ━ ─ ╳ ➖ ⚊ ⚋ ⚌
     command yes "${1:-━}" 2>'/dev/null' | head -n "${COLUMNS:-$(tput cols)}" | tr -d '\n'
@@ -38,7 +42,7 @@ function hr {
 ## SUMMARY: Print horizontal line.
 ## USAGE: hr2 [CHAR]
 ## NOTE: Alternative version.
-## NOTE: `tput' is part of `ncurses'.
+## NOTE: `tput' is a part of `ncurses'.
 function hr2 {
     command printf -v chars '%*s' "${COLUMNS:-$(tput cols)}" && echo "${chars// /${1:-━}}" ## non-POSIX substitution expansion.
     # command printf '%*s' "${COLUMNS:-$(tput cols)}" | tr ' ' "${1:--}" ## `tr' doesn't work w/ Unicode chars properly.
@@ -60,15 +64,15 @@ function manc {
 
 ## SUMMARY: Search particular term in specified manpage;
 ##   display results with highlighted search terms and 7 lines surrounding each hit.
-## USAGE: manf PAGE TERM
+## USAGE: manf <PAGE> <TERM>
 function manf {
-    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command man "${1}" | command grep -iC7 "${2}" --color='always' | command less -CR || { echo "${FUNCNAME[0]}: missing arguments: PAGE TERM" 1>&2; return 1; }
+    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command man "${1}" | command grep -iC7 "${2}" --color='always' | command less -CR || { echo "${FUNCNAME[0]}: missing arguments: <PAGE> <TERM>" 1>&2; return 1; }
 }
 
 ## SUMMARY: Make a new directory and immediately cd into it.
-## USAGE: mkcd DIRECTORY
+## USAGE: mkcd <DIRECTORY>
 function mkcd {
-    [[ -n "${1}" ]] && command mkdir -pv "${1}" && command cd "${1}" || { echo "${FUNCNAME[0]}: missing argument: DIRECTORY" 1>&2; return 1; }
+    [[ -n "${1}" ]] && command mkdir -pv "${1}" && command cd "${1}" || { echo "${FUNCNAME[0]}: missing argument: <DIRECTORY>" 1>&2; return 1; }
 }
 
 ## SUMMARY: Make backup of Bash history file.
@@ -81,19 +85,19 @@ function backup_history {
 }
 
 ## SUMMARY: See `https://gist.github.com/lelandbatey/8677901'.
-## USAGE: wb_clean INPUT OUTPUT
+## USAGE: wb_clean <INPUT> <OUTPUT>
 ## TODO: Move to separate script.
 function wb_clean {
-    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command convert "${1}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
+    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command convert "${1}" -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -level 60%,91%,0.1 "${2}" || { echo "${FUNCNAME[0]}: missing arguments: <INPUT> <OUTPUT>" 1>&2; return 1; }
 }
 
 ## Notify user when specified command finished execution.
-## USAGE: alert COMMAND [ARGS...]
+## USAGE: alert <COMMAND> [ARGS ...]
 ## NOTE: For icon names see:
 ##   `http://standards.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html'.
-## NOTE: `tput' is part of `ncurses'.
+## NOTE: `tput' is a part of `ncurses'.
 function alert {
-    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: COMMAND [ARGS...]" 1>&2; return 1; }
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: <COMMAND> [ARGS ...]" 1>&2; return 1; }
 
     local __summary__="${@}"
     local __start_time__="$(date +%s)"
@@ -106,10 +110,10 @@ function alert {
 ## SUMMARY: Quick timer.
 ## USAGE: timer [NUMBER[SUFFIX]]
 ##   where `SUFFIX' can be set to:
-##     `s' for seconds (the default);
-##     `m' for minutes;
-##     `h' for hours;
-##     `d' for days.
+##     -- `s' for seconds (the default);
+##     -- `m' for minutes;
+##     -- `h' for hours;
+##     --  `d' for days.
 ## NOTES: If no argument is given, the default timespan will be 5 minutes.
 function timer {
     local __duration__="${1:-5m}"
@@ -119,21 +123,21 @@ function timer {
 }
 
 ## SUMMARY: Read a file using `dd' and compresses it w/ `gzip'.
-## USAGE: ddgz INPUT OUTPUT
+## USAGE: ddgz <INPUT> <OUTPUT>
 function ddgz {
-    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || { echo "${FUNCNAME[0]}: missing arguments: INPUT OUTPUT" 1>&2; return 1; }
+    [[ -n "${1}" ]] && [[ -n "${2}" ]] && command dd if="${1}" conv='sync,noerror,notrunc,excl' bs='8192K' | command gzip -c 1>"${2}" || { echo "${FUNCNAME[0]}: missing arguments: <INPUT> <OUTPUT>" 1>&2; return 1; }
 }
 
 ## SUMMARY: Create extremely compressed .tar.xz archive.
-## USAGE: tcexz OUTPUT FILE [FILES...]
+## USAGE: tcexz <OUTPUT> <FILE ...>
 function tcexz {
-    [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${FUNCNAME[0]}: missing arguments: OUTPUT FILE [FILES...]" 1>&2; return 1; }
+    [[ "${#}" -ge 2 ]] && command env XZ_OPTS='-9e' tar --create --xz --verbose --file="${1}" ${@:2} || { echo "${FUNCNAME[0]}: missing arguments: <OUTPUT> <FILE ...>" 1>&2; return 1; }
 }
 
 ## SUMMARY: Print prompt for `virtualenv'.
-## USAGE: __venv_ps1 FORMAT
+## USAGE: __venv_ps1 <FORMAT>
 function __venv_ps1 {
-    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: FORMAT" 1>&2; return 1; }
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing argument: <FORMAT>" 1>&2; return 1; }
 
     [[ -n "${VIRTUAL_ENV}" ]] && command printf "${1}" "$(basename ${VIRTUAL_ENV})"
 }
@@ -148,7 +152,7 @@ function welcome_msg {
 }
 
 ## SUMMARY: Take a note.
-## USAGE: note [WORD [WORDS...]]
+## USAGE: note [WORD ...]
 function note {
     local __file__="${HOME}"'/.notes'
 
@@ -172,9 +176,9 @@ function note {
 }
 
 ## SUMMARY: Extract archive(s).
-## USAGE: extract FILE [FILES...]
+## USAGE: extract <FILE ...>
 function extract {
-    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: FILE [FILES...]" 1>&2; return 1; }
+    [[ "${#}" -lt 1 ]] && { echo "${FUNCNAME[0]}: missing arguments: <FILE ...>" 1>&2; return 1; }
 
     local __cmd__ __retcode__ __file__
 
@@ -211,9 +215,9 @@ function extract {
 }
 
 ## SUMMARY: Compile source file w/ `GCC' and execute produced binary.
-## USAGE: ccc FILE
+## USAGE: ccc <FILE>
 function ccc {
-    [[ "${1}" ]] || { echo "${FUNCNAME[0]}: missing argument: FILE" 1>&2; return 1; }
+    [[ "${1}" ]] || { echo "${FUNCNAME[0]}: missing argument: <FILE>" 1>&2; return 1; }
     [[ -r "${1}" ]] || { echo "${FUNCNAME[0]}: file \`${1}' does not exist or is not readable" 1>&2; return 1; }
 
     local __output_path__="${TMPDIR:-/tmp}/${1##*/}"
@@ -225,9 +229,9 @@ function ccc {
 }
 
 ## SUMMARY: Copy data w/ verification using `rsync'.
-## USAGE: rsarc COPY_LOG CHECK_LOG SRC [SRCS...] DEST
+## USAGE: rsarc <COPY_LOG> <CHECK_LOG> <SRC ...> <DEST>
 function rsarc {
-    [[ "${#}" -lt 4 ]] && { echo "${FUNCNAME[0]}: missing arguments: COPY_LOG CHECK_LOG SRC [SRCS...] DEST" 1>&2; return 1; }
+    [[ "${#}" -lt 4 ]] && { echo "${FUNCNAME[0]}: missing arguments: <COPY_LOG> <CHECK_LOG> <SRC ...> <DEST>" 1>&2; return 1; }
 
     rsync \
         --verbose \
